@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação do Sistema - Secretaria de Educação</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+        }
+
+        /* --- CABEÇALHO --- */
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+
+        .logo-container {
+            max-width: 280px;
+            margin: 0 auto 16px auto;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .badge-slogan {
+            display: inline-block;
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #0f172a;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #64748b;
+        }
+
+        /* --- SEÇÕES GENERALIZADAS --- */
+        section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #334155;
+            margin-bottom: 12px;
+        }
+
+        /* --- BENEFÍCIOS (GRID DE CARDS) --- */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .card-benefit {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card-benefit h3 {
+            font-size: 16px;
+            color: #2563eb;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .card-benefit p {
+            font-size: 13px;
+            margin-bottom: 0;
+            color: #64748b;
+        }
+
+        /* --- FERRAMENTAS --- */
+        .tool-box {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #2563eb;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .tool-box h3 {
+            font-size: 17px;
+            color: #0f172a;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tool-box ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .tool-box ul li {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 6px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tool-box ul li::before {
+            content: "•";
+            color: #2563eb;
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+
+        /* --- LEGENDA DO CALENDÁRIO --- */
+        .legend-list {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .dot-blue { background-color: #2563eb; }
+        .dot-orange { background-color: #f97316; }
+        .dot-gray { background-color: #cbd5e1; }
+
+        @media (max-width: 600px) {
+            body { padding: 16px 10px; }
+            .container { padding: 24px 16px; }
+            h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- CABEÇALHO -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="sec-edu.png" alt="Logo Secretaria de Educação" onerror="this.style.display='none'; this.parentElement.innerText='[ LOGO DA SECRETARIA ]';">
+            </div>
+            <span class="badge-slogan">Gestão & Inovação</span>
+            <h1>Central de Ferramentas Institucionais</h1>
+            <p class="subtitle">Secretaria Municipal de Educação de Presidente Dutra - BA</p>
+        </header>
+
+        <!-- INSTITUCIONAL -->
+        <section>
+            <h2 class="section-title">🏛️ Sobre a Secretaria de Educação</h2>
+            <p>
+                A <strong>Secretaria Municipal de Educação</strong> tem como compromisso fundamental assegurar o ensino de excelência, o cumprimento das metas pedagógicas e a valorização da comunidade escolar. 
+            </p>
+            <p>
+                Sob a liderança e diretrizes da <strong>Secretária de Educação</strong>, o órgão busca continuamente modernizar a gestão pública, integrando novas tecnologias à rotina administrativa para proporcionar mais transparência, agilidade e suporte técnico eficiente às unidades escolares.
+            </p>
+        </section>
+
+        <!-- BENEFÍCIOS -->
+        <section>
+            <h2 class="section-title">✨ Benefícios da Central Unificada</h2>
+            <p>Este painel foi desenvolvido para otimizar os processos diários de diretores, coordenadores e servidores da rede municipal:</p>
+            
+            <div class="grid-cards">
+                <div class="card-benefit">
+                    <h3>Padronização de Dados</h3>
+                    <p>Garante que todas as escolas utilizem o mesmo parâmetro oficial para contagem de prazos e preenchimento de documentos.</p>
+                </div>
+                <div class="card-benefit">
+                    <h3>Agilidade nos Processos</h3>
+                    <p>Reduz significativamente o tempo gasto em checagens manuais de calendários, conferências de CEP e elaboração de relatórios.</p>
+                </div>
+                <div class="card-benefit">
+                    <h3>Segurança & Automação</h3>
+                    <p>Evita erros humanos no cômputo de dias letivos por meio de algoritmos matemáticos atualizados segundo as normas locais.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GUIA DAS FERRAMENTAS -->
+        <section>
+            <h2 class="section-title">🛠️ Como Usar os Utilitários</h2>
+
+            <!-- Ferramenta 1 -->
+            <div class="tool-box">
+                <h3>1. Calculadora de Dias Úteis e Letivos</h3>
+                <p>Ferramenta para cômputo exato de prazos pedagógicos e administrativos do município.</p>
+                <ul>
+                    <li><strong>O que faz:</strong> Calcula dias úteis, sábados, domingos e feriados entre duas datas, descontando automaticamente os feriados estaduais (BA), municipais de Presidente Dutra e pontos facultativos.</li>
+                    <li><strong>Cálculo Perpétuo:</strong> Atualizado dinamicamente para calcular feriados móveis (Carnaval, Semana Santa e Corpus Christi) para qualquer ano no futuro.</li>
+                    <li><strong>Como usar:</strong> Insira a <em>Data de Início</em> e a <em>Data de Fim</em> e clique em <strong>Calcular Dias Letivos</strong> para exibir a tabela de contagem.</li>
+                </ul>
+            </div>
+
+            <!-- Ferramenta 2 -->
+            <div class="tool-box">
+                <h3>2. Calendário Visual Interativo</h3>
+                <p>Proporciona visualização clara do período consultado.</p>
+                <div class="legend-list">
+                    <div class="legend-item"><span class="color-dot dot-blue"></span> Azul: Dia útil / letivo</div>
+                    <div class="legend-item"><span class="color-dot dot-orange"></span> Laranja: Feriado / Recesso</div>
+                    <div class="legend-item"><span class="color-dot dot-gray"></span> Cinza: Fim de semana</div>
+                </div>
+                <ul>
+                    <li><strong>Como usar:</strong> É exibido automaticamente após o cálculo. Utilize os botões <strong>&lt;</strong> e <strong>&gt;</strong> para navegar entre os meses selecionados.</li>
+                </ul>
+            </div>
+
+            <!-- Ferramenta 3 -->
+            <div class="tool-box">
+                <h3>3. Buscador de CEP</h3>
+                <p>Utilitário de consulta ágil para cadastros e correspondências oficiais.</p>
+                <ul>
+                    <li><strong>O que faz:</strong> Retorna o endereço completo (logradouro, bairro, cidade e estado) ao informar um CEP válido, ou encontra o CEP a partir do nome da rua.</li>
+                    <li><strong>Como usar:</strong> Digite o número do CEP ou endereço no campo de pesquisa, clique em <strong>Pesquisar</strong> e copie os dados para seu formulário.</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

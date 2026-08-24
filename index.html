@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Sistemas</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        /* --- LAYOUT DESKTOP (BARRA LATERAL) --- */
+        #sidebar {
+            width: 280px;
+            height: 100%;
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Espaço para Logo Horizontal */
+        .logo-container {
+            width: 120%;
+            max-width: 250px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            text-align: left;
+            margin-top: 8px;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .nav-item.active {
+            background-color: #3b82f6;
+            color: #ffffff;
+        }
+
+        /* --- ÁREA DO CONTEÚDO (IFRAME) --- */
+        #content-area {
+            flex-grow: 1;
+            height: 100%;
+            position: relative;
+            background-color: #f8fafc;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- AVISO QUANDO NENHUM ITEM ESTÁ SELECIONADO --- */
+        .placeholder-text {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        /* --- BARRA SUPERIOR MOBILE --- */
+        #mobile-header {
+            display: none;
+            width: 100%;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+
+        .mobile-logo {
+            max-height: 35px;
+            max-width: 140px;
+            object-fit: contain;
+        }
+
+        .mobile-select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            color: #0f172a;
+            background-color: #ffffff;
+            outline: none;
+            max-width: 60%;
+        }
+
+        /* --- RESPONSIVIDADE (MOBILE) --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            #sidebar {
+                display: none;
+            }
+
+            #mobile-header {
+                display: flex;
+            }
+
+            #content-area {
+                height: calc(100vh - 60px);
+            }
+        }
+/* Estilo do Rodapé */
+.footer-rodape {
+    padding: 12px 16px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 11px;
+    color: #94a3b8;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+/* Ajustes no Desktop */
+#sidebar .footer-rodape {
+    margin-top: auto;
+}
+
+/* Esconde o rodapé da sidebar e exibe no final da página em telas Mobile */
+@media (max-width: 768px) {
+    #sidebar .footer-rodape {
+        display: none;
+    }
+    
+    #content-area {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #content-area .footer-rodape {
+        border-top: 1px solid #e2e8f0;
+        flex-shrink: 0;
+    }
+}
+
+@media (min-width: 769px) {
+    #content-area .footer-rodape {
+        display: none;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR DESKTOP -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <!-- Insira a URL ou caminho local da sua logo horizontal abaixo -->
+                <img src="sec-edu.png" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerText='[ LOGO AQUI ]';">
+            </div>
+            <span class="sidebar-title">Sistemas</span>
+        </div>
+        <ul class="nav-list" id="navList">
+            <!-- Itens inseridos dinamicamente pelo script -->
+        </ul>
+<footer class="footer-rodape">
+    © 2026 Secretaria de Educação • Dev: Yan A.C.
+</footer>
+    </aside>
+
+    <!-- HEADER DROPDOWN MOBILE -->
+    <header id="mobile-header">
+        <img src="logo-horizontal.png" alt="Logo" class="mobile-logo" onerror="this.style.display='none'">
+        <select class="mobile-select" id="mobileSelect" onchange="selecionarSistema(this.value)">
+            <!-- Opções inseridas dinamicamente pelo script -->
+        </select>
+    </header>
+
+    <!-- ÁREA DE EXIBIÇÃO DO IFRAME -->
+    <main id="content-area">
+        <iframe id="viewerFrame" src="" style="display: none;"></iframe>
+        <div id="placeholder" class="placeholder-text">Selecione um sistema no menu.</div>
+<footer class="footer-rodape">
+    © 2026 Secretaria de Educação • Desenvolvido por Yan A.C
+</footer>
+    </main>
+
+    <script>
+        // =================================================================
+        // CONFIGURAÇÃO DOS SISTEMAS / ARQUIVOS
+        // =================================================================
+        const SISTEMAS = [
+	    { nome: "Início", arquivo: "inicio.html" },
+	    { nome: "Buscador de CEP", arquivo: "1 - consulta_cep.html" },
+            { nome: "Calculadora de Dias Letivos", arquivo: "3 - contador_dias_uteis.html" },
+            { nome: "Calculadoras de Calendário", arquivo: "2 - calendario.html" }
+        ];
+
+        // REFERÊNCIAS DO DOM
+        const navList = document.getElementById('navList');
+        const mobileSelect = document.getElementById('mobileSelect');
+        const viewerFrame = document.getElementById('viewerFrame');
+        const placeholder = document.getElementById('placeholder');
+
+        // INICIALIZAÇÃO DA INTERFACE
+        function initMenu() {
+            navList.innerHTML = '';
+            mobileSelect.innerHTML = '<option value="" disabled selected>Selecione um sistema...</option>';
+
+            SISTEMAS.forEach((item, index) => {
+                // Preenche Menu Desktop
+                const li = document.createElement('li');
+                li.className = 'nav-item';
+                li.textContent = item.nome;
+                li.onclick = () => selecionarSistema(index);
+                li.setAttribute('data-index', index);
+                navList.appendChild(li);
+
+                // Preenche Dropdown Mobile
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = item.nome;
+                mobileSelect.appendChild(option);
+            });
+
+            // Opcional: Carrega o primeiro item automaticamente se houver itens cadastrados
+            if (SISTEMAS.length > 0) {
+                selecionarSistema(0);
+            }
+        }
+
+        // FUNÇÃO DE SELEÇÃO E CARREGAMENTO
+        function selecionarSistema(index) {
+            const item = SISTEMAS[index];
+            if (!item) return;
+
+            // Atualiza Iframe
+            viewerFrame.src = item.arquivo;
+            viewerFrame.style.display = 'block';
+            placeholder.style.display = 'none';
+
+            // Atualiza destaque no menu Desktop
+            document.querySelectorAll('.nav-item').forEach((el, i) => {
+                if (parseInt(i) === parseInt(index)) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            // Sincroniza Dropdown Mobile
+            mobileSelect.value = index;
+        }
+
+        // Executa a montagem ao carregar a página
+        window.addEventListener('DOMContentLoaded', initMenu);
+    </script>
+</body>
+</html>

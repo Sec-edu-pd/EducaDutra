@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de CEP e Endereço</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background-color: #e5e7eb;
+            color: #4b5563;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+            color: #1f2937;
+            background-color: #ffffff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        input:readonly {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        /* Container Flex para alinhar o input com o botão de copiar */
+        .copy-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .copy-input-group input {
+            flex: 1;
+        }
+
+        .btn-copy-field {
+            padding: 0 14px;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-copy-field:hover {
+            background-color: #059669;
+        }
+
+        /* Dropdown customizado com busca */
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #ffffff;
+            border: 2px solid #3b82f6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+            color: #1d4ed8;
+        }
+
+        .busca-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-main {
+            padding: 0 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            height: 48px;
+        }
+
+        .btn-main:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-copy-all {
+            width: 100%;
+            padding: 12px;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 15px;
+        }
+
+        .btn-copy-all:hover {
+            background-color: #7c3aed;
+        }
+
+        .btn-clear {
+            width: 100%;
+            padding: 12px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-clear:hover {
+            background-color: #dc2626;
+        }
+
+        .erro-msg {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .resultados-lista {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .item-resultado {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .item-resultado:hover {
+            background-color: #f3f4f6;
+        }
+
+        .item-resultado:last-child {
+            border-bottom: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 10px;
+        }
+	.logo {
+    display: block;
+    max-width: 150px; /* Ajuste a largura máxima conforme necessário */
+    height: auto;
+    margin: 0 auto 20px auto; /* Centraliza a imagem e adiciona espaço abaixo */
+}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+	<img src="sec-edu.png" alt="Logo" class="logo">
+        <h2>Consulta de CEP / Endereço</h2>
+        
+        <div class="tab-buttons">
+            <button class="tab-btn active" id="tabPorCep">Por CEP</button>
+            <button class="tab-btn" id="tabPorEndereco">Por Endereço</button>
+        </div>
+
+        <!-- ABA 1: CONSULTA POR CEP -->
+        <div id="secaoCep">
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <div class="busca-container">
+                    <input type="text" id="cep" placeholder="00000-000" maxlength="9" autocomplete="off">
+                    <button class="btn-main" id="btnBuscarCep">Buscar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 2: CONSULTA POR ENDEREÇO -->
+        <div id="secaoEndereco" style="display: none;">
+            <div class="grid-2">
+                <!-- DROPDOWN SEARCHBOX UF -->
+                <div class="form-group">
+                    <label for="ufInput">Estado (UF)</label>
+                    <input type="text" id="ufInput" placeholder="Busque a UF..." autocomplete="off">
+                    <div id="listUf" class="dropdown-list"></div>
+                </div>
+
+                <!-- DROPDOWN SEARCHBOX CIDADE -->
+                <div class="form-group">
+                    <label for="cidadeInput">Cidade</label>
+                    <input type="text" id="cidadeInput" placeholder="Selecione a UF primeiro..." autocomplete="off" disabled>
+                    <div id="listCidade" class="dropdown-list"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="logradouroBusca">Rua / Logradouro (min. 3 letras)</label>
+                <input type="text" id="logradouroBusca" placeholder="EX: Sete de Setembro">
+            </div>
+
+            <button class="btn-main" id="btnBuscarEndereco" style="width: 100%;">Buscar Endereço</button>
+            
+            <div id="listaResultados" class="resultados-lista"></div>
+        </div>
+
+        <div id="erroCep" class="erro-msg"></div>
+
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+        <!-- CAMPOS DE RETORNO COM BOTÕES DE COPIAR -->
+        <div class="form-group">
+            <label for="cepResultado">CEP Encontrado</label>
+            <div class="copy-input-group">
+                <input type="text" id="cepResultado" readonly>
+                <button class="btn-copy-field" onclick="copiarTexto('cepResultado', this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="logradouro">Rua / Logradouro</label>
+            <div class="copy-input-group">
+                <input type="text" id="logradouro" readonly>
+                <button class="btn-copy-field" onclick="copiarTexto('logradouro', this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="bairro">Bairro</label>
+            <div class="copy-input-group">
+                <input type="text" id="bairro" readonly>
+                <button class="btn-copy-field" onclick="copiarTexto('bairro', this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="cidade">Cidade</label>
+            <div class="copy-input-group">
+                <input type="text" id="cidade" readonly>
+                <button class="btn-copy-field" onclick="copiarTexto('cidade', this)">Copiar</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="uf">Estado (UF)</label>
+            <div class="copy-input-group">
+                <input type="text" id="uf" readonly>
+                <button class="btn-copy-field" onclick="copiarTexto('uf', this)">Copiar</button>
+            </div>
+        </div>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <button class="btn-copy-all" id="btnCopiarTudo">Copiar Tudo</button>
+        <button class="btn-clear" id="btnLimpar">Limpar Dados</button>
+    </div>
+
+    <script>
+        // Lista Completa das UFs do Brasil
+        const estadosBR = [
+            { sigla: "AC", nome: "Acre" },
+            { sigla: "AL", nome: "Alagoas" },
+            { sigla: "AP", nome: "Amapá" },
+            { sigla: "AM", nome: "Amazonas" },
+            { sigla: "BA", nome: "Bahia" },
+            { sigla: "CE", nome: "Ceará" },
+            { sigla: "DF", nome: "Distrito Federal" },
+            { sigla: "ES", nome: "Espírito Santo" },
+            { sigla: "GO", nome: "Goiás" },
+            { sigla: "MA", nome: "Maranhão" },
+            { sigla: "MT", nome: "Mato Grosso" },
+            { sigla: "MS", nome: "Mato Grosso do Sul" },
+            { sigla: "MG", nome: "Minas Gerais" },
+            { sigla: "PA", nome: "Pará" },
+            { sigla: "PB", nome: "Paraíba" },
+            { sigla: "PR", nome: "Paraná" },
+            { sigla: "PE", nome: "Pernambuco" },
+            { sigla: "PI", nome: "Piauí" },
+            { sigla: "RJ", nome: "Rio de Janeiro" },
+            { sigla: "RN", nome: "Rio Grande do Norte" },
+            { sigla: "RS", nome: "Rio Grande do Sul" },
+            { sigla: "RO", nome: "Rondônia" },
+            { sigla: "RR", nome: "Roraima" },
+            { sigla: "SC", nome: "Santa Catarina" },
+            { sigla: "SP", nome: "São Paulo" },
+            { sigla: "SE", nome: "Sergipe" },
+            { sigla: "TO", nome: "Tocantins" }
+        ];
+
+        let cidadesDoEstado = [];
+
+        // Elementos DOM
+        const tabPorCep = document.getElementById('tabPorCep');
+        const tabPorEndereco = document.getElementById('tabPorEndereco');
+        const secaoCep = document.getElementById('secaoCep');
+        const secaoEndereco = document.getElementById('secaoEndereco');
+
+        const inputCep = document.getElementById('cep');
+        const btnBuscarCep = document.getElementById('btnBuscarCep');
+
+        const ufInput = document.getElementById('ufInput');
+        const listUf = document.getElementById('listUf');
+        const cidadeInput = document.getElementById('cidadeInput');
+        const listCidade = document.getElementById('listCidade');
+
+        const logradouroBusca = document.getElementById('logradouroBusca');
+        const btnBuscarEndereco = document.getElementById('btnBuscarEndereco');
+        const listaResultados = document.getElementById('listaResultados');
+
+        const erroCep = document.getElementById('erroCep');
+        const btnLimpar = document.getElementById('btnLimpar');
+        const btnCopiarTudo = document.getElementById('btnCopiarTudo');
+
+        let ufSelecionada = "";
+        let cidadeSelecionada = "";
+
+        // Função universal e segura para copiar texto (Compatível com PC, Android e iOS)
+        function executarCopia(texto) {
+            if (!texto) return Promise.reject("Vazio");
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(texto);
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = texto;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                return new Promise((resolve, reject) => {
+                    document.execCommand('copy') ? resolve() : reject();
+                    textArea.remove();
+                });
+            }
+        }
+
+        // Copiar campo individual
+        function copiarTexto(elementId, btn) {
+            const input = document.getElementById(elementId);
+            const texto = input.value.trim();
+            if (!texto) return;
+
+            executarCopia(texto).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = "Copiado!";
+                btn.style.backgroundColor = "#059669";
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.backgroundColor = "#10b981";
+                }, 1500);
+            }).catch(() => {
+                mostrarErro("Erro ao copiar o texto.");
+            });
+        }
+
+        // Copiar todos os dados
+        btnCopiarTudo.addEventListener('click', () => {
+            const cepVal = document.getElementById('cepResultado').value.trim();
+            const logradouroVal = document.getElementById('logradouro').value.trim();
+            const bairroVal = document.getElementById('bairro').value.trim();
+            const cidadeVal = document.getElementById('cidade').value.trim();
+            const ufVal = document.getElementById('uf').value.trim();
+
+            if (!cepVal && !logradouroVal) {
+                mostrarErro("Não há dados para copiar.");
+                return;
+            }
+
+            const textoCompleto = `CEP: ${cepVal}\nLogradouro: ${logradouroVal}\nBairro: ${bairroVal}\nCidade: ${cidadeVal}\nUF: ${ufVal}`;
+
+            executarCopia(textoCompleto).then(() => {
+                const originalText = btnCopiarTudo.textContent;
+                btnCopiarTudo.textContent = "Copiado Tudo!";
+                btnCopiarTudo.style.backgroundColor = "#059669";
+                setTimeout(() => {
+                    btnCopiarTudo.textContent = originalText;
+                    btnCopiarTudo.style.backgroundColor = "#8b5cf6";
+                }, 1500);
+            }).catch(() => {
+                mostrarErro("Erro ao copiar todos os dados.");
+            });
+        });
+
+        // Alternância de Abas
+        tabPorCep.addEventListener('click', () => {
+            tabPorCep.classList.add('active');
+            tabPorEndereco.classList.remove('active');
+            secaoCep.style.display = 'block';
+            secaoEndereco.style.display = 'none';
+            ocultarErro();
+        });
+
+        tabPorEndereco.addEventListener('click', () => {
+            tabPorEndereco.classList.add('active');
+            tabPorCep.classList.remove('active');
+            secaoCep.style.display = 'none';
+            secaoEndereco.style.display = 'block';
+            ocultarErro();
+        });
+
+        // Searchbox / Dropdown UF
+        ufInput.addEventListener('focus', () => filtrarUf());
+        ufInput.addEventListener('input', () => {
+            ufSelecionada = "";
+            cidadeInput.value = "";
+            cidadeInput.disabled = true;
+            cidadesDoEstado = [];
+            filtrarUf();
+        });
+
+        function filtrarUf() {
+            const termo = ufInput.value.toLowerCase();
+            const filtrados = estadosBR.filter(e => 
+                e.sigla.toLowerCase().includes(termo) || e.nome.toLowerCase().includes(termo)
+            );
+
+            listUf.innerHTML = '';
+            if (filtrados.length === 0) {
+                listUf.style.display = 'none';
+                return;
+            }
+
+            filtrados.forEach(est => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = `${est.sigla} - ${est.nome}`;
+                div.addEventListener('click', () => {
+                    ufInput.value = `${est.sigla} - ${est.nome}`;
+                    ufSelecionada = est.sigla;
+                    listUf.style.display = 'none';
+                    carregarCidades(est.sigla);
+                });
+                listUf.appendChild(div);
+            });
+            listUf.style.display = 'block';
+        }
+
+        // Carrega Cidades via API do IBGE
+        async function carregarCidades(uf) {
+            cidadeInput.disabled = true;
+            cidadeInput.placeholder = "Carregando cidades...";
+            cidadeInput.value = "";
+            cidadeSelecionada = "";
+
+            try {
+                const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
+                const data = await res.json();
+                cidadesDoEstado = data.map(c => c.nome);
+                
+                cidadeInput.disabled = false;
+                cidadeInput.placeholder = "Busque a cidade...";
+            } catch (e) {
+                mostrarErro("Erro ao carregar cidades do estado selecionado.");
+                cidadeInput.placeholder = "Erro ao carregar";
+            }
+        }
+
+        // Searchbox / Dropdown Cidade
+        cidadeInput.addEventListener('focus', () => filtrarCidades());
+        cidadeInput.addEventListener('input', () => {
+            cidadeSelecionada = "";
+            filtrarCidades();
+        });
+
+        function filtrarCidades() {
+            if (!ufSelecionada || cidadesDoEstado.length === 0) return;
+
+            const termo = cidadeInput.value.toLowerCase();
+            const filtradas = cidadesDoEstado.filter(c => c.toLowerCase().includes(termo));
+
+            listCidade.innerHTML = '';
+            if (filtradas.length === 0) {
+                listCidade.style.display = 'none';
+                return;
+            }
+
+            filtradas.slice(0, 50).forEach(cid => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = cid;
+                div.addEventListener('click', () => {
+                    cidadeInput.value = cid;
+                    cidadeSelecionada = cid;
+                    listCidade.style.display = 'none';
+                });
+                listCidade.appendChild(div);
+            });
+            listCidade.style.display = 'block';
+        }
+
+        // Fechar dropdowns ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!ufInput.contains(e.target) && !listUf.contains(e.target)) {
+                listUf.style.display = 'none';
+            }
+            if (!cidadeInput.contains(e.target) && !listCidade.contains(e.target)) {
+                listCidade.style.display = 'none';
+            }
+        });
+
+        // Máscara e auto-busca no input do CEP
+        inputCep.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+            }
+            e.target.value = value;
+
+            const cepLimpo = value.replace(/\D/g, '');
+            if (cepLimpo.length === 8) {
+                buscarPorCep(cepLimpo);
+            }
+        });
+
+        btnBuscarCep.addEventListener('click', () => {
+            const cepLimpo = inputCep.value.replace(/\D/g, '');
+            buscarPorCep(cepLimpo);
+        });
+
+        // Consulta ViaCEP por CEP
+        async function buscarPorCep(cep) {
+            if (cep.length !== 8) {
+                mostrarErro("Digite um CEP válido com 8 números.");
+                return;
+            }
+
+            limparResultados();
+            ocultarErro();
+
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                if (!response.ok) throw new Error();
+
+                const data = await response.json();
+                if (data.erro) {
+                    mostrarErro("Este CEP não foi encontrado.");
+                    return;
+                }
+
+                preencherFormulario(data);
+            } catch (error) {
+                mostrarErro("Erro de conexão ao buscar o CEP.");
+            }
+        }
+
+        // Consulta ViaCEP por Endereço
+        btnBuscarEndereco.addEventListener('click', async () => {
+            const uf = ufSelecionada;
+            const cidade = cidadeSelecionada || cidadeInput.value.trim();
+            const logradouro = logradouroBusca.value.trim();
+
+            if (!uf) {
+                mostrarErro("Selecione um Estado (UF) da lista.");
+                return;
+            }
+            if (!cidade) {
+                mostrarErro("Selecione ou digite uma Cidade.");
+                return;
+            }
+            if (logradouro.length < 3) {
+                mostrarErro("Informe a rua/logradouro (mínimo 3 caracteres).");
+                return;
+            }
+
+            limparResultados();
+            ocultarErro();
+
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${uf}/${encodeURIComponent(cidade)}/${encodeURIComponent(logradouro)}/json/`);
+                if (!response.ok) throw new Error();
+
+                const data = await response.json();
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    mostrarErro("Nenhum endereço encontrado com essas informações.");
+                    return;
+                }
+
+                if (data.length === 1) {
+                    preencherFormulario(data[0]);
+                } else {
+                    exibirListaResultados(data);
+                }
+
+            } catch (error) {
+                mostrarErro("Erro de conexão ao buscar por endereço.");
+            }
+        });
+
+        function exibirListaResultados(itens) {
+            listaResultados.innerHTML = '';
+            listaResultados.style.display = 'block';
+
+            itens.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item-resultado';
+                div.innerHTML = `<strong>CEP: ${item.cep}</strong> - ${item.logradouro}, ${item.bairro} (${item.localidade}/${item.uf})`;
+                div.addEventListener('click', () => {
+                    preencherFormulario(item);
+                    listaResultados.style.display = 'none';
+                });
+                listaResultados.appendChild(div);
+            });
+        }
+
+        function preencherFormulario(data) {
+            document.getElementById('cepResultado').value = data.cep || '';
+            document.getElementById('logradouro').value = data.logradouro || '';
+            document.getElementById('bairro').value = data.bairro || '';
+            document.getElementById('cidade').value = data.localidade || '';
+            document.getElementById('uf').value = data.uf || '';
+        }
+
+        function limparResultados() {
+            document.getElementById('cepResultado').value = '';
+            document.getElementById('logradouro').value = '';
+            document.getElementById('bairro').value = '';
+            document.getElementById('cidade').value = '';
+            document.getElementById('uf').value = '';
+            listaResultados.innerHTML = '';
+            listaResultados.style.display = 'none';
+        }
+
+        // Botão Limpar Dados
+        btnLimpar.addEventListener('click', () => {
+            inputCep.value = '';
+            ufInput.value = '';
+            cidadeInput.value = '';
+            cidadeInput.disabled = true;
+            cidadeInput.placeholder = "Selecione a UF primeiro...";
+            logradouroBusca.value = '';
+            ufSelecionada = "";
+            cidadeSelecionada = "";
+            cidadesDoEstado = [];
+            limparResultados();
+            ocultarErro();
+        });
+
+        function mostrarErro(mensagem) {
+            erroCep.textContent = mensagem;
+            erroCep.style.display = 'block';
+        }
+
+        function ocultarErro() {
+            erroCep.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

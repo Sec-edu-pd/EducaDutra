@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Calendário e Datas</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* LAYOUT PRINCIPAL COM PAINEL LATERAL */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* PAINEL LATERAL (SIDEBAR) */
+        aside {
+            width: 280px;
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding-left: 10px;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .nav-item.active {
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* SELECT DROPDOWN APENAS PARA MOBILE */
+        .mobile-select-container {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .mobile-select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            background-color: #ffffff;
+            color: #0f172a;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .mobile-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* ÁREA DE CONTEÚDO */
+        main {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* CABEÇALHO: LOGO EXATAMENTE ACIMA DO TÍTULO */
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            max-width: 140px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        /* FORMULÁRIO E TABS */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #0f172a;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn-main {
+            flex: 2;
+            padding: 14px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-main:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-clear {
+            flex: 1;
+            padding: 14px 20px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-clear:hover {
+            background-color: #dc2626;
+        }
+
+        /* RESULTADOS */
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #3b82f6;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #334155;
+            display: none;
+        }
+
+        .erro-msg {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* INSTRUÇÕES ABAIXO */
+        .instructions {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .instructions h3 {
+            font-size: 18px;
+            color: #0f172a;
+            margin-bottom: 15px;
+        }
+
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .instruction-card {
+            background-color: #ffffff;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .instruction-card h4 {
+            font-size: 14px;
+            color: #3b82f6;
+            margin-bottom: 6px;
+        }
+
+        .instruction-card p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* AJUSTES RESPONSIVOS (MOBILE) */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+                padding: 16px;
+            }
+
+            .nav-list {
+                display: none; /* Esconde o menu lateral tradicional */
+            }
+
+            .mobile-select-container {
+                display: flex; /* Exibe o menu dropdown */
+            }
+
+            main {
+                padding: 25px 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-main, .btn-clear {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- PAINEL LATERAL (SIDEBAR NO DESKTOP / DROPDOWN NO MOBILE) -->
+        <aside>
+            <div class="sidebar-title">CALENDÁRIO</div>
+            
+            <!-- Menu Lista para Desktop -->
+            <ul class="nav-list">
+                <li class="nav-item active" id="menuOpt1" onclick="switchTab('opt1')">Calculadora de dias entre datas</li>
+                <li class="nav-item" id="menuOpt2" onclick="switchTab('opt2')">Calculadora de faltam quantos dias</li>
+                <li class="nav-item" id="menuOpt4" onclick="switchTab('opt4')">Somar dias em datas</li>
+            </ul>
+
+            <!-- Menu Dropdown para Mobile -->
+            <div class="mobile-select-container">
+                <select id="mobileDropdown" class="mobile-select" onchange="switchTab(this.value)">
+                    <option value="opt1">Calculadora de dias entre datas</option>
+                    <option value="opt2">Calculadora de faltam quantos dias</option>
+                    <option value="opt4">Somar dias em datas</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- ÁREA PRINCIPAL DA CALCULADORA -->
+        <main>
+            <!-- CABEÇALHO COM LOGO LOGO ACIMA DO TÍTULO -->
+            <div class="header-section">
+                <img src="sec-edu.png" alt="Logo" class="logo">
+                <h1 id="mainTitle">Calculadora de dias entre datas</h1>
+            </div>
+
+            <!-- 1. CALCULADORA DE DIAS ENTRE DATAS -->
+            <div id="opt1" class="tab-content active">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="o1-inicio">Data Inicial</label>
+                        <input type="date" id="o1-inicio">
+                    </div>
+                    <div class="form-group">
+                        <label for="o1-fim">Data Final</label>
+                        <input type="date" id="o1-fim">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-main" onclick="calcDiasEntreDatas('o1')">Calcular Intervalo</button>
+                    <button class="btn-clear" onclick="limparCampos()">Limpar</button>
+                </div>
+                <div id="o1-resultado" class="result-box"></div>
+            </div>
+
+            <!-- 2. CALCULADORA DE FALTAM QUANTOS DIAS -->
+            <div id="opt2" class="tab-content">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="o2-fim">Data Futura de Destino</label>
+                        <input type="date" id="o2-fim">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-main" onclick="calcFaltamQuantosDias()">Calcular Dias Restantes</button>
+                    <button class="btn-clear" onclick="limparCampos()">Limpar</button>
+                </div>
+                <div id="o2-resultado" class="result-box"></div>
+            </div>
+
+            <!-- 3. SOMAR DIAS EM DATAS -->
+            <div id="opt4" class="tab-content">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="o4-inicio">Data de Início</label>
+                        <input type="date" id="o4-inicio">
+                    </div>
+                    <div class="form-group">
+                        <label for="o4-dias">Quantidade de Dias a Somar</label>
+                        <input type="number" id="o4-dias" placeholder="Ex: 30" min="1">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-main" onclick="calcSomarDias()">Calcular Nova Data</button>
+                    <button class="btn-clear" onclick="limparCampos()">Limpar</button>
+                </div>
+                <div id="o4-resultado" class="result-box"></div>
+            </div>
+
+            <div id="erroMsg" class="erro-msg"></div>
+
+            <!-- INSTRUÇÕES SIMPLES -->
+            <section class="instructions">
+                <h3>📖 Como usar as opções do calendário</h3>
+                <div class="instructions-grid">
+                    <div class="instruction-card">
+                        <h4>Calculadora de dias entre datas</h4>
+                        <p>Escolha duas datas no calendário e veja a diferença exata de dias e o total contando com a data inicial.</p>
+                    </div>
+                    <div class="instruction-card">
+                        <h4>Calculadora de faltam quantos dias</h4>
+                        <p>Escolha uma data futura para descobrir quantos dias faltam a partir de hoje.</p>
+                    </div>
+                    <div class="instruction-card">
+                        <h4>Somar dias em datas</h4>
+                        <p>Informe uma data base e a quantidade de dias para calcular a nova data de término.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const hojeObj = new Date();
+        const ano = hojeObj.getFullYear();
+        const mes = String(hojeObj.getMonth() + 1).padStart(2, '0');
+        const dia = String(hojeObj.getDate()).padStart(2, '0');
+        const hojeStr = `${ano}-${mes}-${dia}`;
+
+        document.getElementById('o1-inicio').value = hojeStr;
+        document.getElementById('o4-inicio').value = hojeStr;
+
+        const titulos = {
+            'opt1': 'Calculadora de dias entre datas',
+            'opt2': 'Calculadora de faltam quantos dias',
+            'opt4': 'Somar dias em datas'
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            
+            // Sincroniza estado no menu desktop
+            const navId = 'menu' + tabId.charAt(0).toUpperCase() + tabId.slice(1);
+            if (document.getElementById(navId)) {
+                document.getElementById(navId).classList.add('active');
+            }
+
+            // Sincroniza o valor do dropdown mobile
+            document.getElementById('mobileDropdown').value = tabId;
+
+            document.getElementById('mainTitle').innerText = titulos[tabId];
+            ocultarErro();
+        }
+
+        function parseDataLocal(dataStr) {
+            const partes = dataStr.split('-');
+            return new Date(partes[0], partes[1] - 1, partes[2]);
+        }
+
+        function formatarData(data) {
+            return data.toLocaleDateString('pt-BR');
+        }
+
+        // CÁLCULO 1: ENTRE DATAS
+        function calcDiasEntreDatas(prefix) {
+            ocultarErro();
+            const startStr = document.getElementById(`${prefix}-inicio`).value;
+            const endStr = document.getElementById(`${prefix}-fim`).value;
+
+            if (!startStr || !endStr) {
+                mostrarErro("Por favor, selecione as duas datas.");
+                return;
+            }
+
+            const dInicio = parseDataLocal(startStr);
+            const dFim = parseDataLocal(endStr);
+
+            if (dFim < dInicio) {
+                mostrarErro("A data final não pode ser menor que a data inicial.");
+                return;
+            }
+
+            const diffMs = dFim - dInicio;
+            const diasDiferenca = Math.round(diffMs / (1000 * 60 * 60 * 24));
+            const diasTotaisInclusive = diasDiferenca + 1;
+
+            const resDiv = document.getElementById(`${prefix}-resultado`);
+            resDiv.innerHTML = `
+                <strong>Período selecionado:</strong> ${formatarData(dInicio)} até ${formatarData(dFim)}<br><br>
+                📌 <strong>A partir do dia seguinte (Diferença de dias):</strong> ${diasDiferenca} dias<br>
+                📌 <strong>A partir da mesma data (Incluindo ambos os dias):</strong> ${diasTotaisInclusive} dias
+            `;
+            resDiv.style.display = 'block';
+        }
+
+        // CÁLCULO 2: FALTAM QUANTOS DIAS
+        function calcFaltamQuantosDias() {
+            ocultarErro();
+            const endStr = document.getElementById('o2-fim').value;
+
+            if (!endStr) {
+                mostrarErro("Por favor, selecione uma data futura.");
+                return;
+            }
+
+            const dInicio = parseDataLocal(hojeStr);
+            const dFim = parseDataLocal(endStr);
+
+            if (dFim < dInicio) {
+                mostrarErro("A data informada já passou. Selecione uma data posterior a hoje.");
+                return;
+            }
+
+            const diffMs = dFim - dInicio;
+            const diasRestantes = Math.round(diffMs / (1000 * 60 * 60 * 24));
+            const diasComHoje = diasRestantes + 1;
+
+            const resDiv = document.getElementById('o2-resultado');
+            resDiv.innerHTML = `
+                <strong>Data de Hoje:</strong> ${formatarData(dInicio)}<br>
+                <strong>Data Objetivo:</strong> ${formatarData(dFim)}<br><br>
+                📌 <strong>Contando a partir do dia seguinte:</strong> Faltam ${diasRestantes} dias<br>
+                📌 <strong>Contando a partir de hoje (Incluindo hoje):</strong> Faltam ${diasComHoje} dias
+            `;
+            resDiv.style.display = 'block';
+        }
+
+        // CÁLCULO 3: SOMAR DIAS
+        function calcSomarDias() {
+            ocultarErro();
+            const diasVal = document.getElementById('o4-dias').value;
+            const startStr = document.getElementById('o4-inicio').value;
+
+            if (!diasVal || !startStr) {
+                mostrarErro("Por favor, preencha a data inicial e a quantidade de dias.");
+                return;
+            }
+
+            const dias = parseInt(diasVal);
+            const dInicio = parseDataLocal(startStr);
+
+            const dInclusive = new Date(dInicio);
+            dInclusive.setDate(dInclusive.getDate() + (dias - 1));
+
+            const dExclusive = new Date(dInicio);
+            dExclusive.setDate(dExclusive.getDate() + dias);
+
+            const resDiv = document.getElementById('o4-resultado');
+            resDiv.innerHTML = `
+                <strong>Data de Início:</strong> ${formatarData(dInicio)}<br>
+                <strong>Dias Somados:</strong> ${dias} dias<br><br>
+                📌 <strong>A partir da mesma data (Contando com o dia inicial):</strong> ${formatarData(dInclusive)}<br>
+                📌 <strong>A partir do dia seguinte (Sem o dia inicial):</strong> ${formatarData(dExclusive)}
+            `;
+            resDiv.style.display = 'block';
+        }
+
+        function limparCampos() {
+            document.querySelectorAll('input[type="number"]').forEach(i => i.value = '');
+            document.querySelectorAll('input[type="date"]').forEach(i => i.value = hojeStr);
+            document.querySelectorAll('.result-box').forEach(r => r.style.display = 'none');
+            ocultarErro();
+        }
+
+        function mostrarErro(msg) {
+            const err = document.getElementById('erroMsg');
+            err.textContent = msg;
+            err.style.display = 'block';
+        }
+
+        function ocultarErro() {
+            document.getElementById('erroMsg').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

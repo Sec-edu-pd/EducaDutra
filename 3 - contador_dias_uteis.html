@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Dias Letivos - Presidente Dutra (BA)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 16px;
+        }
+
+        /* ÁREA DE CONTEÚDO CENTRALIZADA */
+        main {
+            max-width: 800px;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* CABEÇALHO COM LOGO CENTRALIZADO ACIMA DO TÍTULO */
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            max-width: 140px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        /* FORMULÁRIO EM GRID */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #0f172a;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input[type="date"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* BOTÕES DE AÇÃO */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-main {
+            flex: 2;
+            padding: 14px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-main:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-clear {
+            flex: 1;
+            padding: 14px 20px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-clear:hover {
+            background-color: #dc2626;
+        }
+
+        .erro-msg {
+            color: #ef4444;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* SEÇÃO DE RESULTADOS */
+        .results-wrapper {
+            display: none;
+        }
+
+        /* TABELA DE RESUMO */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 15px;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .summary-table th {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .summary-table td {
+            color: #334155;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* WIDGET DO CALENDÁRIO VISUAL */
+        .calendar-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            margin-bottom: 40px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .calendar-nav-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            font-size: 16px;
+            color: #475569;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .calendar-nav-btn:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            padding-bottom: 12px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1.1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #334155;
+            border-radius: 6px;
+        }
+
+        /* DESTAQUES DAS DATAS NO CALENDÁRIO */
+        .day-cell.other-month {
+            color: #cbd5e1;
+        }
+
+        .day-cell.workday {
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .day-cell.holiday {
+            background-color: #f97316;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .day-cell.weekend-in-range {
+            background-color: #f1f5f9;
+            color: #64748b;
+        }
+
+        /* INSTRUÇÕES E EXPLICAÇÃO */
+        .instructions {
+            padding-top: 30px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .instructions h3 {
+            font-size: 18px;
+            color: #0f172a;
+            margin-bottom: 15px;
+        }
+
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .instruction-card {
+            background-color: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .instruction-card h4 {
+            font-size: 14px;
+            color: #3b82f6;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .instruction-card p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px 10px;
+            }
+
+            main {
+                padding: 25px 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-main, .btn-clear {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <!-- CABEÇALHO COM LOGO ACIMA DO TÍTULO -->
+        <div class="header-section">
+            <img src="sec-edu.png" alt="Logo" class="logo">
+            <h1>Calculadora de Dias Letivos - Presidente Dutra (BA)</h1>
+        </div>
+
+        <!-- FORMULÁRIO DE ENTRADA -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="data-inicio">Data de Início (De)</label>
+                <input type="date" id="data-inicio">
+            </div>
+            <div class="form-group">
+                <label for="data-fim">Data de Fim (Para)</label>
+                <input type="date" id="data-fim">
+            </div>
+        </div>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <div class="action-buttons">
+            <button class="btn-main" onclick="processarCalculo()">Calcular Dias Letivos</button>
+            <button class="btn-clear" onclick="limparCampos()">Limpar</button>
+        </div>
+
+        <div id="erroMsg" class="erro-msg"></div>
+
+        <!-- SEÇÃO DE RESULTADOS -->
+        <div id="resultsWrapper" class="results-wrapper">
+            <!-- TABELA DE RESUMO -->
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Dias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dias úteis / letivos</strong></td>
+                        <td id="res-dias-uteis">0</td>
+                    </tr>
+                    <tr>
+                        <td>Dias corridos</td>
+                        <td id="res-dias-corridos">0</td>
+                    </tr>
+                    <tr>
+                        <td>Sábados</td>
+                        <td id="res-sabados">0</td>
+                    </tr>
+                    <tr>
+                        <td>Domingos</td>
+                        <td id="res-domingos">0</td>
+                    </tr>
+                    <tr>
+                        <td>Feriados / Sem expediente</td>
+                        <td id="res-feriados">0</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- CALENDÁRIO VISUAL INTERATIVO -->
+            <div class="calendar-card">
+                <div class="calendar-header">
+                    <span class="calendar-title" id="calMonthYear">Mês Ano</span>
+                    <div>
+                        <button class="calendar-nav-btn" onclick="mudarMesCalendario(-1)">&lt;</button>
+                        <button class="calendar-nav-btn" onclick="mudarMesCalendario(1)">&gt;</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="day-name">Dom</div>
+                    <div class="day-name">Seg</div>
+                    <div class="day-name">Ter</div>
+                    <div class="day-name">Qua</div>
+                    <div class="day-name">Qui</div>
+                    <div class="day-name">Sex</div>
+                    <div class="day-name">Sab</div>
+                </div>
+
+                <div class="calendar-grid" id="calendarDays">
+                    <!-- Gerado dinamicamente via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- INSTRUÇÕES E EXPLICAÇÃO -->
+        <section class="instructions">
+            <h3>📖 Como funciona a contagem de dias letivos</h3>
+            <div class="instructions-grid">
+                <div class="instruction-card">
+                    <h4>Dias Úteis (Azul)</h4>
+                    <p>Contabiliza de segunda a sexta-feira, destacando no calendário visual os dias válidos do período.</p>
+                </div>
+                <div class="instruction-card">
+                    <h4>Feriados e Recessos (Laranja)</h4>
+                    <p>Contempla feriados nacionais, estaduais (BA), municipais de Presidente Dutra e pontos facultativos específicos.</p>
+                </div>
+                <div class="instruction-card">
+                    <h4>Cálculo de Datas Móveis</h4>
+                    <p>Calcula dinamicamente Carnaval, Quarta de Cinzas, Semana Santa e Corpus Christi para qualquer ano consultado.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- CONSTANTE COM DATAS FIXAS (MM-DD) DE PRESIDENTE DUTRA - BA ---
+        const diasSemExpedientePresidenteDutra = [
+            // FERIADOS NACIONAIS FIXOS
+            '01-01', // Ano Novo / Confraternização Universal
+            '04-21', // Tiradentes
+            '05-01', // Dia do Trabalhador
+            '09-07', // Independência do Brasil
+            '10-12', // Nossa Senhora Aparecida / Padroeira do Brasil
+            '11-02', // Finados
+            '11-15', // Proclamação da República
+            '11-20', // Consciência Negra (Lei nº 14.759/2023)
+            '12-25', // Natal
+
+            // FERIADO ESTADUAL (BAHIA)
+            '07-02', // Independência da Bahia
+
+            // FERIADOS MUNICIPAIS FIXOS (PRESIDENTE DUTRA - BA)
+            '08-06', // Senhor Bom Jesus (Padroeiro Local)
+            '09-08', // Nossa Senhora do Perpétuo Socorro (Padroeira da Cidade)
+
+            // DIAS NÃO LETIVOS / PONTOS FACULTATIVOS ESPECÍFICOS & FESTIVAS FIXAS
+            '06-24', // São João (Recesso junino escolar tradicional na BA)
+            '10-15', // Dia do Professor (Não letivo para Educação)
+            '10-28', // Dia do Servidor Público
+            '12-24', // Véspera de Natal
+            '12-31'  // Véspera de Ano Novo
+        ];
+
+        // FUNÇÃO QUE CALCULA AS DATAS MÓVEIS DE UM ANO E COMBINA COM AS FIXAS
+        function obterDiasSemExpedienteAno(anoRef) {
+            const feriados = new Set();
+            
+            // Adiciona todas as datas fixas para o ano informado (YYYY-MM-DD)
+            diasSemExpedientePresidenteDutra.forEach(f => feriados.add(`${anoRef}-${f}`));
+
+            // Algoritmo de Computus (Cálculo do Domingo de Páscoa)
+            const a = anoRef % 19;
+            const b = Math.floor(anoRef / 100);
+            const c = anoRef % 100;
+            const d = Math.floor(b / 4);
+            const e = b % 4;
+            const f = Math.floor((b + 8) / 25);
+            const g = Math.floor((b - f + 1) / 3);
+            const h = (19 * a + b - d - g + 15) % 30;
+            const i = Math.floor(c / 4);
+            const k = c % 4;
+            const l = (32 + 2 * e + 2 * i - h - k) % 7;
+            const m = Math.floor((a + 11 * h + 22 * l) / 451);
+            const mesP = Math.floor((h + l - 7 * m + 114) / 31);
+            const diaP = ((h + l - 7 * m + 114) % 31) + 1;
+
+            const pascoa = new Date(anoRef, mesP - 1, diaP);
+
+            const addDias = (dataBase, dias) => {
+                const res = new Date(dataBase);
+                res.setDate(res.getDate() + dias);
+                const mStr = String(res.getMonth() + 1).padStart(2, '0');
+                const dStr = String(res.getDate()).padStart(2, '0');
+                return `${anoRef}-${mStr}-${dStr}`;
+            };
+
+            // INCLUSÃO DINÂMICA DAS DATAS MÓVEIS (Diferenças relativas à Páscoa)
+            feriados.add(addDias(pascoa, -48)); // Segunda-Feira de Carnaval
+            feriados.add(addDias(pascoa, -47)); // Terça-Feira de Carnaval
+            feriados.add(addDias(pascoa, -46)); // Quarta-Feira de Cinzas
+            feriados.add(addDias(pascoa, -3));  // Quinta-Feira Santa
+            feriados.add(addDias(pascoa, -2));  // Sexta-Feira Santa (Paixão de Cristo)
+            feriados.add(addDias(pascoa, 60));  // Corpus Christi
+
+            return feriados;
+        }
+
+        const hojeObj = new Date();
+        const ano = hojeObj.getFullYear();
+        const mes = String(hojeObj.getMonth() + 1).padStart(2, '0');
+        const dia = String(hojeObj.getDate()).padStart(2, '0');
+        const hojeStr = `${ano}-${mes}-${dia}`;
+
+        document.getElementById('data-inicio').value = hojeStr;
+
+        let currentCalDate = new Date();
+        let selectedStart = null;
+        let selectedEnd = null;
+
+        function parseDataLocal(dataStr) {
+            const partes = dataStr.split('-');
+            return new Date(partes[0], partes[1] - 1, partes[2]);
+        }
+
+        function formatarAnoMesDia(data) {
+            const a = data.getFullYear();
+            const m = String(data.getMonth() + 1).padStart(2, '0');
+            const d = String(data.getDate()).padStart(2, '0');
+            return `${a}-${m}-${d}`;
+        }
+
+        function processarCalculo() {
+            ocultarErro();
+            const startStr = document.getElementById('data-inicio').value;
+            const endStr = document.getElementById('data-fim').value;
+
+            if (!startStr || !endStr) {
+                mostrarErro("Por favor, selecione as duas datas.");
+                return;
+            }
+
+            selectedStart = parseDataLocal(startStr);
+            selectedEnd = parseDataLocal(endStr);
+
+            if (selectedEnd < selectedStart) {
+                mostrarErro("A data de fim não pode ser menor que a data de início.");
+                return;
+            }
+
+            const feriadosSet = new Set();
+            for (let y = selectedStart.getFullYear(); y <= selectedEnd.getFullYear(); y++) {
+                const fAno = obterDiasSemExpedienteAno(y);
+                fAno.forEach(f => feriadosSet.add(f));
+            }
+
+            let diasCorridos = 0;
+            let sabados = 0;
+            let domingos = 0;
+            let feriados = 0;
+            let diasUteis = 0;
+
+            let cur = new Date(selectedStart);
+            while (cur <= selectedEnd) {
+                diasCorridos++;
+                const dayOfWeek = cur.getDay();
+                const dateKey = formatarAnoMesDia(cur);
+                const isHoliday = feriadosSet.has(dateKey);
+
+                if (dayOfWeek === 0) {
+                    domingos++;
+                } else if (dayOfWeek === 6) {
+                    sabados++;
+                } else if (isHoliday) {
+                    feriados++;
+                } else {
+                    diasUteis++;
+                }
+
+                cur.setDate(cur.getDate() + 1);
+            }
+
+            document.getElementById('res-dias-uteis').textContent = diasUteis;
+            document.getElementById('res-dias-corridos').textContent = diasCorridos;
+            document.getElementById('res-sabados').textContent = sabados;
+            document.getElementById('res-domingos').textContent = domingos;
+            document.getElementById('res-feriados').textContent = feriados;
+
+            currentCalDate = new Date(selectedStart);
+            renderizarCalendario(feriadosSet);
+
+            document.getElementById('resultsWrapper').style.display = 'block';
+        }
+
+        function renderizarCalendario(feriadosSet) {
+            if (!feriadosSet) {
+                feriadosSet = new Set();
+                for (let y = selectedStart.getFullYear(); y <= selectedEnd.getFullYear(); y++) {
+                    const fAno = obterDiasSemExpedienteAno(y);
+                    fAno.forEach(f => feriadosSet.add(f));
+                }
+            }
+
+            const year = currentCalDate.getFullYear();
+            const month = currentCalDate.getMonth();
+
+            const nomesMeses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('calMonthYear').textContent = `${nomesMeses[month]} ${year}`;
+
+            const gridContainer = document.getElementById('calendarDays');
+            gridContainer.innerHTML = '';
+
+            const primeiroDiaMes = new Date(year, month, 1).getDay();
+            const ultimoDiaMesAtual = new Date(year, month + 1, 0).getDate();
+            const ultimoDiaMesAnterior = new Date(year, month, 0).getDate();
+
+            for (let i = primeiroDiaMes - 1; i >= 0; i--) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell other-month';
+                cell.textContent = ultimoDiaMesAnterior - i;
+                gridContainer.appendChild(cell);
+            }
+
+            for (let d = 1; d <= ultimoDiaMesAtual; d++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+                cell.textContent = d;
+
+                const thisDate = new Date(year, month, d);
+                const dateKey = formatarAnoMesDia(thisDate);
+
+                if (selectedStart && selectedEnd && thisDate >= selectedStart && thisDate <= selectedEnd) {
+                    const dayOfWeek = thisDate.getDay();
+                    const isHoliday = feriadosSet.has(dateKey);
+
+                    if (isHoliday && dayOfWeek !== 0 && dayOfWeek !== 6) {
+                        cell.classList.add('holiday');
+                    } else if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                        cell.classList.add('workday');
+                    } else {
+                        cell.classList.add('weekend-in-range');
+                    }
+                }
+
+                gridContainer.appendChild(cell);
+            }
+
+            const totalCelulas = primeiroDiaMes + ultimoDiaMesAtual;
+            const proximasCelulas = (totalCelulas % 7 === 0) ? 0 : 7 - (totalCelulas % 7);
+            for (let j = 1; j <= proximasCelulas; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell other-month';
+                cell.textContent = j;
+                gridContainer.appendChild(cell);
+            }
+        }
+
+        function mudarMesCalendario(delta) {
+            if (!selectedStart) return;
+            currentCalDate.setMonth(currentCalDate.getMonth() + delta);
+            renderizarCalendario();
+        }
+
+        function limparCampos() {
+            document.getElementById('data-inicio').value = hojeStr;
+            document.getElementById('data-fim').value = '';
+            document.getElementById('resultsWrapper').style.display = 'none';
+            ocultarErro();
+        }
+
+        function mostrarErro(msg) {
+            const err = document.getElementById('erroMsg');
+            err.textContent = msg;
+            err.style.display = 'block';
+        }
+
+        function ocultarErro() {
+            document.getElementById('erroMsg').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
