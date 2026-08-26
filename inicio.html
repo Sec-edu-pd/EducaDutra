@@ -124,14 +124,26 @@
             color: #64748b;
         }
 
-        /* --- FERRAMENTAS --- */
+        /* --- FERRAMENTAS CLICÁVEIS --- */
         .tool-box {
+            display: block;
+            text-decoration: none;
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
             border-left: 4px solid #2563eb;
             border-radius: 6px;
             padding: 20px;
             margin-bottom: 16px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .tool-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+            border-color: #cbd5e1;
+            border-left-color: #1d4ed8;
+            background-color: #f8fafc;
         }
 
         .tool-box h3 {
@@ -139,6 +151,20 @@
             color: #0f172a;
             margin-bottom: 8px;
             font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tool-box h3::after {
+            content: "Acessar →";
+            font-size: 13px;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .tool-box p {
+            color: #334155;
         }
 
         .tool-box ul {
@@ -249,8 +275,8 @@
         <section>
             <h2 class="section-title">🛠️ Como Usar os Utilitários</h2>
 
-            <!-- Ferramenta 1 -->
-            <div class="tool-box">
+            <!-- Ferramenta 1: Contador de Dias Úteis -->
+            <a href="3 - contador_dias_uteis.html" class="tool-box">
                 <h3>1. Calculadora de Dias Úteis e Letivos</h3>
                 <p>Ferramenta para cômputo exato de prazos pedagógicos e administrativos do município.</p>
                 <ul>
@@ -258,10 +284,10 @@
                     <li><strong>Cálculo Perpétuo:</strong> Atualizado dinamicamente para calcular feriados móveis (Carnaval, Semana Santa e Corpus Christi) para qualquer ano no futuro.</li>
                     <li><strong>Como usar:</strong> Insira a <em>Data de Início</em> e a <em>Data de Fim</em> e clique em <strong>Calcular Dias Letivos</strong> para exibir a tabela de contagem.</li>
                 </ul>
-            </div>
+            </a>
 
-            <!-- Ferramenta 2 -->
-            <div class="tool-box">
+            <!-- Ferramenta 2: Calendário -->
+            <a href="2 - calendario.html" class="tool-box">
                 <h3>2. Calendário Visual Interativo</h3>
                 <p>Proporciona visualização clara do período consultado.</p>
                 <div class="legend-list">
@@ -272,17 +298,17 @@
                 <ul>
                     <li><strong>Como usar:</strong> É exibido automaticamente após o cálculo. Utilize os botões <strong>&lt;</strong> e <strong>&gt;</strong> para navegar entre os meses selecionados.</li>
                 </ul>
-            </div>
+            </a>
 
-            <!-- Ferramenta 3 -->
-            <div class="tool-box">
+            <!-- Ferramenta 3: Buscador de CEP -->
+            <a href="1 - consulta_cep.html" class="tool-box">
                 <h3>3. Buscador de CEP</h3>
                 <p>Utilitário de consulta ágil para cadastros e correspondências oficiais.</p>
                 <ul>
                     <li><strong>O que faz:</strong> Retorna o endereço completo (logradouro, bairro, cidade e estado) ao informar um CEP válido, ou encontra o CEP a partir do nome da rua.</li>
                     <li><strong>Como usar:</strong> Digite o número do CEP ou endereço no campo de pesquisa, clique em <strong>Pesquisar</strong> e copie os dados para seu formulário.</li>
                 </ul>
-            </div>
+            </a>
         </section>
 
     </div>
