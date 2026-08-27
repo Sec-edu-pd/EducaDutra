@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Prazos e Dias Úteis Geral</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 16px;
+        }
+
+        main {
+            max-width: 850px;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* CABEÇALHO COM LOGO */
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            max-width: 140px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #0f172a;
+            outline: none;
+        }
+
+        input[type="date"]:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-main {
+            flex: 2;
+            padding: 14px 20px;
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-main:hover {
+            background-color: #1e40af;
+        }
+
+        .btn-clear {
+            flex: 1;
+            padding: 14px 20px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-clear:hover {
+            background-color: #dc2626;
+        }
+
+        .erro-msg {
+            color: #ef4444;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .results-wrapper {
+            display: none;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 15px;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .summary-table th {
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .calendar-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            margin-bottom: 30px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .calendar-nav-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            font-size: 16px;
+            color: #475569;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            padding-bottom: 8px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #334155;
+            border-radius: 6px;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .day-cell.other-month {
+            color: #cbd5e1;
+        }
+
+        .cat-feriado { background-color: #ef4444; color: #ffffff; } 
+        .cat-dia-util { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+
+        .day-cell.weekend-in-range {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+        }
+
+        .month-events-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .month-events-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .event-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .legend-section {
+            margin-top: 30px;
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .legend-section h3 {
+            font-size: 16px;
+            color: #0f172a;
+            margin-bottom: 6px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px 15px;
+            margin-top: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 12px 8px; }
+            main { padding: 20px 12px; }
+            .action-buttons { flex-direction: column; }
+            .legend-grid { grid-template-columns: 1fr; }
+            .day-cell { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <!-- CABEÇALHO COM A LOGO ADICIONADA -->
+        <div class="header-section">
+            <img src="sec-edu.png" alt="Logo" class="logo">
+            <h1>Calculadora de Dias Úteis Geral</h1>
+            <p class="subtitle">Contagem de Dias Úteis e Prazos (Feriados Nacionais do Brasil)</p>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="data-inicio">Data Inicial</label>
+                <input type="date" id="data-inicio">
+            </div>
+            <div class="form-group">
+                <label for="data-fim">Data Final</label>
+                <input type="date" id="data-fim">
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-main" onclick="processarCalculo()">Calcular Dias Úteis</button>
+            <button class="btn-clear" onclick="limparCampos()">Limpar</button>
+        </div>
+
+        <div id="erroMsg" class="erro-msg"></div>
+
+        <div id="resultsWrapper" class="results-wrapper">
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Descrição da Contagem</th>
+                        <th>Dias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Total de dias úteis</strong></td>
+                        <td id="res-dias-uteis">0</td>
+                    </tr>
+                    <tr>
+                        <td>Total de dias corridos</td>
+                        <td id="res-dias-corridos">0</td>
+                    </tr>
+                    <tr>
+                        <td>Sábados</td>
+                        <td id="res-sabados">0</td>
+                    </tr>
+                    <tr>
+                        <td>Domingos</td>
+                        <td id="res-domingos">0</td>
+                    </tr>
+                    <tr>
+                        <td>Feriados Nacionais (em dias úteis)</td>
+                        <td id="res-feriados">0</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="calendar-card">
+                <div class="calendar-header">
+                    <span class="calendar-title" id="calMonthYear">Mês Ano</span>
+                    <div>
+                        <button class="calendar-nav-btn" onclick="mudarMesCalendario(-1)">&lt;</button>
+                        <button class="calendar-nav-btn" onclick="mudarMesCalendario(1)">&gt;</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="day-name">Dom</div>
+                    <div class="day-name">Seg</div>
+                    <div class="day-name">Ter</div>
+                    <div class="day-name">Qua</div>
+                    <div class="day-name">Qui</div>
+                    <div class="day-name">Sex</div>
+                    <div class="day-name">Sab</div>
+                </div>
+
+                <div class="calendar-grid" id="calendarDays"></div>
+
+                <div class="month-events-section">
+                    <div class="month-events-title">⚖️ Feriados Nacionais do Mês</div>
+                    <div class="events-list" id="monthEventsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="legend-section">
+            <h3>Legenda</h3>
+            <div class="legend-grid">
+                <div class="legend-item"><div class="legend-box cat-feriado"></div>Feriado Nacional</div>
+                <div class="legend-item"><div class="legend-box cat-dia-util"></div>Dia Útil</div>
+                <div class="legend-item"><div class="legend-box" style="background-color: #f1f5f9;"></div>Fim de Semana</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentCalDate = new Date();
+        let selectedStart = null;
+        let selectedEnd = null;
+
+        // Define a data atual como padrão ao carregar a página
+        window.onload = function() {
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            
+            const inicioPadrao = `${anoAtual}-01-01`;
+            const fimPadrao = `${anoAtual}-12-31`;
+
+            document.getElementById('data-inicio').value = inicioPadrao;
+            document.getElementById('data-fim').value = fimPadrao;
+        };
+
+        // Algoritmo de Meeus/Jones/Butcher para calcular a Páscoa em qualquer ano
+        function calcularSextaFeiraSanta(ano) {
+            const a = ano % 19;
+            const b = Math.floor(ano / 100);
+            const c = ano % 100;
+            const d = Math.floor(b / 4);
+            const e = b % 4;
+            const f = Math.floor((b + 8) / 25);
+            const g = Math.floor((b - f + 1) / 3);
+            const h = (19 * a + b - d - g + 15) % 30;
+            const i = Math.floor(c / 4);
+            const k = c % 4;
+            const l = (32 + 2 * e + 2 * i - h - k) % 7;
+            const m = Math.floor((a + 11 * h + 22 * l) / 451);
+            const mes = Math.floor((h + l - 7 * m + 114) / 31);
+            const dia = ((h + l - 7 * m + 114) % 31) + 1;
+
+            const pascoa = new Date(ano, mes - 1, dia);
+            const sextaSanta = new Date(pascoa);
+            sextaSanta.setDate(pascoa.getDate() - 2);
+
+            return sextaSanta;
+        }
+
+        // Obtém o dicionário de feriados nacionais do ano específico
+        function obterFeriadosAno(ano) {
+            const feriados = {
+                [`${ano}-01-01`]: { desc: 'Confraternização Universal', classe: 'cat-feriado' },
+                [`${ano}-04-21`]: { desc: 'Tiradentes', classe: 'cat-feriado' },
+                [`${ano}-05-01`]: { desc: 'Dia do Trabalhador', classe: 'cat-feriado' },
+                [`${ano}-09-07`]: { desc: 'Independência do Brasil', classe: 'cat-feriado' },
+                [`${ano}-10-12`]: { desc: 'Nossa Senhora Aparecida', classe: 'cat-feriado' },
+                [`${ano}-11-02`]: { desc: 'Finados', classe: 'cat-feriado' },
+                [`${ano}-11-15`]: { desc: 'Proclamação da República', classe: 'cat-feriado' },
+                [`${ano}-11-20`]: { desc: 'Dia Nacional de Zumbi e da Consciência Negra', classe: 'cat-feriado' },
+                [`${ano}-12-25`]: { desc: 'Natal', classe: 'cat-feriado' }
+            };
+
+            const sextaSanta = calcularSextaFeiraSanta(ano);
+            const dateKeySexta = formatarAnoMesDia(sextaSanta);
+            feriados[dateKeySexta] = { desc: 'Sexta-feira Santa', classe: 'cat-feriado' };
+
+            return feriados;
+        }
+
+        function parseDataLocal(dataStr) {
+            const partes = dataStr.split('-');
+            return new Date(partes[0], partes[1] - 1, partes[2]);
+        }
+
+        function formatarAnoMesDia(data) {
+            const a = data.getFullYear();
+            const m = String(data.getMonth() + 1).padStart(2, '0');
+            const d = String(data.getDate()).padStart(2, '0');
+            return `${a}-${m}-${d}`;
+        }
+
+        function processarCalculo() {
+            ocultarErro();
+            const startStr = document.getElementById('data-inicio').value;
+            const endStr = document.getElementById('data-fim').value;
+
+            if (!startStr || !endStr) {
+                mostrarErro("Por favor, selecione as duas datas.");
+                return;
+            }
+
+            selectedStart = parseDataLocal(startStr);
+            selectedEnd = parseDataLocal(endStr);
+
+            if (selectedEnd < selectedStart) {
+                mostrarErro("A data final não pode ser anterior à data inicial.");
+                return;
+            }
+
+            let diasCorridos = 0;
+            let sabados = 0;
+            let domingos = 0;
+            let feriadosEmDiasUteis = 0;
+            let diasUteis = 0;
+
+            let cacheFeriados = {};
+
+            let cur = new Date(selectedStart);
+            while (cur <= selectedEnd) {
+                diasCorridos++;
+                const anoAtual = cur.getFullYear();
+                
+                if (!cacheFeriados[anoAtual]) {
+                    cacheFeriados[anoAtual] = obterFeriadosAno(anoAtual);
+                }
+
+                const dayOfWeek = cur.getDay();
+                const dateKey = formatarAnoMesDia(cur);
+                const isFeriado = cacheFeriados[anoAtual][dateKey];
+
+                if (dayOfWeek === 0) {
+                    domingos++;
+                } else if (dayOfWeek === 6) {
+                    sabados++;
+                } else if (isFeriado) {
+                    feriadosEmDiasUteis++;
+                } else {
+                    diasUteis++;
+                }
+
+                cur.setDate(cur.getDate() + 1);
+            }
+
+            document.getElementById('res-dias-uteis').textContent = diasUteis;
+            document.getElementById('res-dias-corridos').textContent = diasCorridos;
+            document.getElementById('res-sabados').textContent = sabados;
+            document.getElementById('res-domingos').textContent = domingos;
+            document.getElementById('res-feriados').textContent = feriadosEmDiasUteis;
+
+            currentCalDate = new Date(selectedStart);
+            renderizarCalendario();
+
+            document.getElementById('resultsWrapper').style.display = 'block';
+        }
+
+        function renderizarCalendario() {
+            const year = currentCalDate.getFullYear();
+            const month = currentCalDate.getMonth();
+
+            const feriadosAnoAtual = obterFeriadosAno(year);
+
+            const nomesMeses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('calMonthYear').textContent = `${nomesMeses[month]} ${year}`;
+
+            const gridContainer = document.getElementById('calendarDays');
+            gridContainer.innerHTML = '';
+
+            const primeiroDiaMes = new Date(year, month, 1).getDay();
+            const ultimoDiaMesAtual = new Date(year, month + 1, 0).getDate();
+            const ultimoDiaMesAnterior = new Date(year, month, 0).getDate();
+
+            for (let i = primeiroDiaMes - 1; i >= 0; i--) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell other-month';
+                cell.textContent = ultimoDiaMesAnterior - i;
+                gridContainer.appendChild(cell);
+            }
+
+            const eventosDoMes = [];
+
+            for (let d = 1; d <= ultimoDiaMesAtual; d++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+                cell.textContent = d;
+
+                const thisDate = new Date(year, month, d);
+                const dateKey = formatarAnoMesDia(thisDate);
+                const ev = feriadosAnoAtual[dateKey];
+                const dayOfWeek = thisDate.getDay();
+
+                if (ev) {
+                    cell.classList.add(ev.classe);
+                    eventosDoMes.push({ dia: d, desc: ev.desc, classe: ev.classe });
+                } else if (selectedStart && selectedEnd && thisDate >= selectedStart && thisDate <= selectedEnd) {
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                        cell.classList.add('cat-dia-util');
+                    } else {
+                        cell.classList.add('weekend-in-range');
+                    }
+                }
+
+                gridContainer.appendChild(cell);
+            }
+
+            const totalCelulas = primeiroDiaMes + ultimoDiaMesAtual;
+            const proximasCelulas = (totalCelulas % 7 === 0) ? 0 : 7 - (totalCelulas % 7);
+            for (let j = 1; j <= proximasCelulas; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell other-month';
+                cell.textContent = j;
+                gridContainer.appendChild(cell);
+            }
+
+            renderizarEventosDoMes(eventosDoMes);
+        }
+
+        function renderizarEventosDoMes(eventos) {
+            const container = document.getElementById('monthEventsList');
+            container.innerHTML = '';
+
+            if (eventos.length === 0) {
+                container.innerHTML = '<div style="font-size:13px; color:#94a3b8; font-style:italic;">Sem feriados nacionais neste mês.</div>';
+                return;
+            }
+
+            eventos.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'event-item';
+
+                const badge = document.createElement('div');
+                badge.className = `event-badge ${item.classe}`;
+                badge.textContent = item.dia;
+
+                const label = document.createElement('span');
+                label.textContent = item.desc;
+
+                row.appendChild(badge);
+                row.appendChild(label);
+                container.appendChild(row);
+            });
+        }
+
+        function mudarMesCalendario(delta) {
+            currentCalDate.setMonth(currentCalDate.getMonth() + delta);
+            renderizarCalendario();
+        }
+
+        function limparCampos() {
+            const anoAtual = new Date().getFullYear();
+            document.getElementById('data-inicio').value = `${anoAtual}-01-01`;
+            document.getElementById('data-fim').value = `${anoAtual}-12-31`;
+            document.getElementById('resultsWrapper').style.display = 'none';
+            ocultarErro();
+        }
+
+        function mostrarErro(msg) {
+            const err = document.getElementById('erroMsg');
+            err.textContent = msg;
+            err.style.display = 'block';
+        }
+
+        function ocultarErro() {
+            document.getElementById('erroMsg').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
