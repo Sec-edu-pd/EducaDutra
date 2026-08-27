@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Dias Letivos - Presidente Dutra (BA)</title>
+    <title>Calculadora de Dias Letivos 2026 - Presidente Dutra (BA)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -22,9 +22,8 @@
             padding: 40px 16px;
         }
 
-        /* ÁREA DE CONTEÚDO CENTRALIZADA */
         main {
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
             background-color: #ffffff;
             padding: 40px;
@@ -33,7 +32,6 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        /* CABEÇALHO COM LOGO CENTRALIZADO ACIMA DO TÍTULO */
         .header-section {
             display: flex;
             flex-direction: column;
@@ -49,12 +47,11 @@
         }
 
         h1 {
-            font-size: 26px;
+            font-size: 24px;
             color: #0f172a;
             font-weight: 700;
         }
 
-        /* FORMULÁRIO EM GRID */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -82,16 +79,14 @@
             font-size: 16px;
             background-color: #ffffff;
             color: #0f172a;
-            transition: border-color 0.2s, box-shadow 0.2s;
             outline: none;
         }
 
         input[type="date"]:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
 
-        /* BOTÕES DE AÇÃO */
         .action-buttons {
             display: flex;
             gap: 15px;
@@ -102,7 +97,7 @@
         .btn-main {
             flex: 2;
             padding: 14px 20px;
-            background-color: #3b82f6;
+            background-color: #0284c7;
             color: white;
             border: none;
             border-radius: 8px;
@@ -113,7 +108,7 @@
         }
 
         .btn-main:hover {
-            background-color: #2563eb;
+            background-color: #0369a1;
         }
 
         .btn-clear {
@@ -141,12 +136,10 @@
             display: none;
         }
 
-        /* SEÇÃO DE RESULTADOS */
         .results-wrapper {
             display: none;
         }
 
-        /* TABELA DE RESUMO */
         .summary-table {
             width: 100%;
             border-collapse: collapse;
@@ -169,22 +162,13 @@
             font-weight: 700;
         }
 
-        .summary-table td {
-            color: #334155;
-        }
-
-        .summary-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* WIDGET DO CALENDÁRIO VISUAL */
         .calendar-card {
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             padding: 24px;
             background-color: #ffffff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .calendar-header {
@@ -208,12 +192,6 @@
             cursor: pointer;
             padding: 6px 12px;
             border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .calendar-nav-btn:hover {
-            background-color: #f1f5f9;
-            color: #0f172a;
         }
 
         .calendar-grid {
@@ -224,123 +202,160 @@
         }
 
         .day-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #475569;
-            padding-bottom: 12px;
+            padding-bottom: 8px;
         }
 
         .day-cell {
-            aspect-ratio: 1.1;
+            aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
             color: #334155;
             border-radius: 6px;
+            font-weight: 500;
+            border: 1px solid transparent;
         }
 
-        /* DESTAQUES DAS DATAS NO CALENDÁRIO */
         .day-cell.other-month {
             color: #cbd5e1;
         }
 
-        .day-cell.workday {
-            background-color: #3b82f6;
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        .day-cell.holiday {
-            background-color: #f97316;
-            color: #ffffff;
-            font-weight: 600;
-        }
+        /* NOVA PALETA DE CORES ÚNICAS E DISTINTAS */
+        .cat-feriado { background-color: #ef4444; color: #ffffff; }          /* 🔴 Feriado: Vermelho */
+        .cat-recesso { background-color: #f97316; color: #ffffff; }          /* 🟠 Recesso: Laranja */
+        .cat-matricula { background-color: #10b981; color: #ffffff; }        /* 🟢 Matrícula: Verde */
+        .cat-ano-letivo { background-color: #eab308; color: #1e293b; }       /* 🟡 Abertura/Término: Amarelo */
+        .cat-planejamento { background-color: #0284c7; color: #ffffff; }     /* 🔵 Planejamento/Conselho/Jornada: Azul */
+        .cat-interclasse { background-color: #a855f7; color: #ffffff; }      /* 🟣 Interclasse: Roxo */
+        .cat-projeto { background-color: #78350f; color: #ffffff; }          /* 🟤 Projetos/Eventos da Escola: Marrom */
+        .cat-tematica { background-color: #64748b; color: #ffffff; }         /* ⚪ Temáticas/Conscientização: Cinza */
+        .cat-resultados { background-color: #ec4899; color: #ffffff; }       /* 🩷 Entrega de Resultados: Rosa */
+        .cat-recuperacao { background-color: #475569; color: #ffffff; }      /* 🔘 Recuperação Final: Grafite */
+        .cat-dia-letivo { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; } /* Dias letivos comuns */
 
         .day-cell.weekend-in-range {
             background-color: #f1f5f9;
             color: #64748b;
         }
 
-        /* INSTRUÇÕES E EXPLICAÇÃO */
-        .instructions {
-            padding-top: 30px;
+        .month-events-section {
+            margin-top: 25px;
+            padding-top: 20px;
             border-top: 1px solid #e2e8f0;
         }
 
-        .instructions h3 {
-            font-size: 18px;
+        .month-events-title {
+            font-size: 16px;
+            font-weight: 700;
             color: #0f172a;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
-        .instructions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .instruction-card {
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .event-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        /* LEGENDA DE CORES FIXA E REORGANIZADA */
+        .legend-section {
+            margin-top: 30px;
             background-color: #f8fafc;
-            padding: 16px;
+            padding: 20px;
             border-radius: 8px;
             border: 1px solid #e2e8f0;
         }
 
-        .instruction-card h4 {
-            font-size: 14px;
-            color: #3b82f6;
+        .legend-section h3 {
+            font-size: 16px;
+            color: #0f172a;
             margin-bottom: 6px;
-            font-weight: 600;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .instruction-card p {
+        .legend-info-text {
             font-size: 13px;
             color: #64748b;
-            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 18px;
+            line-height: 1.4;
         }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 16px 10px;
-            }
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 10px 15px;
+        }
 
-            main {
-                padding: 25px 16px;
-            }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #334155;
+        }
 
-            .action-buttons {
-                flex-direction: column;
-            }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
 
-            .btn-main, .btn-clear {
-                width: 100%;
-            }
+        @media (max-width: 600px) {
+            body { padding: 12px 8px; }
+            main { padding: 20px 12px; }
+            .action-buttons { flex-direction: column; }
+            .legend-grid { grid-template-columns: 1fr; }
+            .day-cell { font-size: 12px; }
         }
     </style>
 </head>
 <body>
 
     <main>
-        <!-- CABEÇALHO COM LOGO ACIMA DO TÍTULO -->
         <div class="header-section">
             <img src="sec-edu.png" alt="Logo" class="logo">
-            <h1>Calculadora de Dias Letivos - Presidente Dutra (BA)</h1>
+            <h1>Calculadora de Dias Letivos 2026 - Presidente Dutra (BA)</h1>
         </div>
 
-        <!-- FORMULÁRIO DE ENTRADA -->
         <div class="form-grid">
             <div class="form-group">
                 <label for="data-inicio">Data de Início (De)</label>
-                <input type="date" id="data-inicio">
+                <input type="date" id="data-inicio" value="2026-02-02">
             </div>
             <div class="form-group">
                 <label for="data-fim">Data de Fim (Para)</label>
-                <input type="date" id="data-fim">
+                <input type="date" id="data-fim" value="2026-12-04">
             </div>
         </div>
 
-        <!-- BOTÕES DE AÇÃO -->
         <div class="action-buttons">
             <button class="btn-main" onclick="processarCalculo()">Calcular Dias Letivos</button>
             <button class="btn-clear" onclick="limparCampos()">Limpar</button>
@@ -348,9 +363,7 @@
 
         <div id="erroMsg" class="erro-msg"></div>
 
-        <!-- SEÇÃO DE RESULTADOS -->
         <div id="resultsWrapper" class="results-wrapper">
-            <!-- TABELA DE RESUMO -->
             <table class="summary-table">
                 <thead>
                     <tr>
@@ -360,7 +373,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Dias úteis / letivos</strong></td>
+                        <td><strong>Dias letivos contados</strong></td>
                         <td id="res-dias-uteis">0</td>
                     </tr>
                     <tr>
@@ -368,7 +381,7 @@
                         <td id="res-dias-corridos">0</td>
                     </tr>
                     <tr>
-                        <td>Sábados</td>
+                        <td>Sábados (não letivos)</td>
                         <td id="res-sabados">0</td>
                     </tr>
                     <tr>
@@ -376,13 +389,12 @@
                         <td id="res-domingos">0</td>
                     </tr>
                     <tr>
-                        <td>Feriados / Sem expediente</td>
+                        <td>Feriados / Recessos (dias úteis)</td>
                         <td id="res-feriados">0</td>
                     </tr>
                 </tbody>
             </table>
 
-            <!-- CALENDÁRIO VISUAL INTERATIVO -->
             <div class="calendar-card">
                 <div class="calendar-header">
                     <span class="calendar-title" id="calMonthYear">Mês Ano</span>
@@ -402,114 +414,141 @@
                     <div class="day-name">Sab</div>
                 </div>
 
-                <div class="calendar-grid" id="calendarDays">
-                    <!-- Gerado dinamicamente via JS -->
+                <div class="calendar-grid" id="calendarDays"></div>
+
+                <div class="month-events-section">
+                    <div class="month-events-title">📌 Eventos e Destaques do Mês</div>
+                    <div class="events-list" id="monthEventsList"></div>
                 </div>
             </div>
         </div>
 
-        <!-- INSTRUÇÕES E EXPLICAÇÃO -->
-        <section class="instructions">
-            <h3>📖 Como funciona a contagem de dias letivos</h3>
-            <div class="instructions-grid">
-                <div class="instruction-card">
-                    <h4>Dias Úteis (Azul)</h4>
-                    <p>Contabiliza de segunda a sexta-feira, destacando no calendário visual os dias válidos do período.</p>
-                </div>
-                <div class="instruction-card">
-                    <h4>Feriados e Recessos (Laranja)</h4>
-                    <p>Contempla feriados nacionais, estaduais (BA), municipais de Presidente Dutra e pontos facultativos específicos.</p>
-                </div>
-                <div class="instruction-card">
-                    <h4>Cálculo de Datas Móveis</h4>
-                    <p>Calcula dinamicamente Carnaval, Quarta de Cinzas, Semana Santa e Corpus Christi para qualquer ano consultado.</p>
-                </div>
+        <!-- LEGENDA COMPLETA ATUALIZADA COM AS NOVAS CORES -->
+        <section class="legend-section">
+            <h3>Guia de Legenda de Cores</h3>
+            <p class="legend-info-text">
+                Confira abaixo a correspondência das cores exclusivas para cada categoria do Calendário Escolar 2026.
+            </p>
+            <div class="legend-grid">
+                <div class="legend-item"><div class="legend-box cat-feriado"></div>Feriados Nacionais e Locais</div>
+                <div class="legend-item"><div class="legend-box cat-recesso"></div>Recessos Escolares (Carnaval e Junino)</div>
+                <div class="legend-item"><div class="legend-box cat-matricula"></div>Matrículas e (Re)Matrículas</div>
+                <div class="legend-item"><div class="legend-box cat-ano-letivo"></div>Início e Fim do Ano / Trimestres</div>
+                <div class="legend-item"><div class="legend-box cat-planejamento"></div>Jornada, Planejamento e Conselhos</div>
+                <div class="legend-item"><div class="legend-box cat-interclasse"></div>Interclasse e Atividades Esportivas</div>
+                <div class="legend-item"><div class="legend-box cat-projeto"></div>Projetos da Escola e Família na Escola</div>
+                <div class="legend-item"><div class="legend-box cat-tematica"></div>Temáticas e Campanhas de Conscientização</div>
+                <div class="legend-item"><div class="legend-box cat-resultados"></div>Entrega de Atas e Resultados Finais</div>
+                <div class="legend-item"><div class="legend-box cat-recuperacao"></div>Estudos de Recuperação Final</div>
             </div>
         </section>
     </main>
 
     <script>
-        // --- CONSTANTE COM DATAS FIXAS (MM-DD) DE PRESIDENTE DUTRA - BA ---
-        const diasSemExpedientePresidenteDutra = [
-            // FERIADOS NACIONAIS FIXOS
-            '01-01', // Ano Novo / Confraternização Universal
-            '04-21', // Tiradentes
-            '05-01', // Dia do Trabalhador
-            '09-07', // Independência do Brasil
-            '10-12', // Nossa Senhora Aparecida / Padroeira do Brasil
-            '11-02', // Finados
-            '11-15', // Proclamação da República
-            '11-20', // Consciência Negra (Lei nº 14.759/2023)
-            '12-25', // Natal
+        const eventos2026 = {
+            // Janeiro
+            '2026-01-01': { desc: 'Confraternização Universal (Feriado)', classe: 'cat-feriado' },
+            '2026-01-12': { desc: 'Entrega das atas de resultados finais 2025', classe: 'cat-resultados' },
+            '2026-01-13': { desc: 'Entrega das atas de resultados finais 2025', classe: 'cat-resultados' },
+            '2026-01-14': { desc: 'Entrega das atas de resultados finais 2025', classe: 'cat-resultados' },
+            '2026-01-15': { desc: 'Entrega das atas de resultados finais 2025', classe: 'cat-resultados' },
+            '2026-01-16': { desc: 'Entrega das atas de resultados finais 2025', classe: 'cat-resultados' },
+            '2026-01-19': { desc: 'Matrícula de alunos novos', classe: 'cat-matricula' },
+            '2026-01-20': { desc: 'Matrícula de alunos novos', classe: 'cat-matricula' },
+            '2026-01-21': { desc: 'Matrícula de alunos novos', classe: 'cat-matricula' },
+            '2026-01-22': { desc: 'Matrícula de alunos novos', classe: 'cat-matricula' },
+            '2026-01-23': { desc: 'Matrícula de alunos novos', classe: 'cat-matricula' },
+            '2026-01-26': { desc: 'Jornada Pedagógica 2026', classe: 'cat-planejamento' },
+            '2026-01-27': { desc: 'Jornada Pedagógica 2026', classe: 'cat-planejamento' },
+            '2026-01-28': { desc: 'Jornada Pedagógica 2026', classe: 'cat-planejamento' },
+            '2026-01-29': { desc: 'Jornada Pedagógica 2026', classe: 'cat-planejamento' },
+            '2026-01-30': { desc: 'Jornada Pedagógica 2026', classe: 'cat-planejamento' },
 
-            // FERIADO ESTADUAL (BAHIA)
-            '07-02', // Independência da Bahia
+            // Fevereiro
+            '2026-02-02': { desc: 'Início do Ano Letivo / 1º Trimestre', classe: 'cat-ano-letivo' },
+            '2026-02-16': { desc: 'Recesso de Carnaval', classe: 'cat-recesso' },
+            '2026-02-17': { desc: 'Recesso de Carnaval', classe: 'cat-feriado' },
+            '2026-02-18': { desc: 'Recesso de Carnaval', classe: 'cat-recesso' },
 
-            // FERIADOS MUNICIPAIS FIXOS (PRESIDENTE DUTRA - BA)
-            '08-06', // Senhor Bom Jesus (Padroeiro Local)
-            '09-08', // Nossa Senhora do Perpétuo Socorro (Padroeira da Cidade)
+            // Março
+ 
 
-            // DIAS NÃO LETIVOS / PONTOS FACULTATIVOS ESPECÍFICOS & FESTIVAS FIXAS
-            '06-24', // São João (Recesso junino escolar tradicional na BA)
-            '10-15', // Dia do Professor (Não letivo para Educação)
-            '10-28', // Dia do Servidor Público
-            '12-24', // Véspera de Natal
-            '12-31'  // Véspera de Ano Novo
-        ];
+            // Abril
+            '2026-04-03': { desc: 'Sexta-feira Santa (Feriado)', classe: 'cat-feriado' },
+            '2026-04-07': { desc: 'Combate ao Bullying e Violência Escolar', classe: 'cat-tematica' },
+            '2026-04-11': { desc: 'Interclasse nas Escolas (Sábado Letivo)', classe: 'cat-interclasse' },
+            '2026-04-12': { desc: 'Aniversário da Cidade (Feriado Municipal)', classe: 'cat-feriado' },
+            '2026-04-21': { desc: 'Tiradentes (Feriado)', classe: 'cat-feriado' },
+            '2026-04-25': { desc: 'Interclasse nas Escolas (Sábado Letivo)', classe: 'cat-interclasse' },
 
-        // FUNÇÃO QUE CALCULA AS DATAS MÓVEIS DE UM ANO E COMBINA COM AS FIXAS
-        function obterDiasSemExpedienteAno(anoRef) {
-            const feriados = new Set();
-            
-            // Adiciona todas as datas fixas para o ano informado (YYYY-MM-DD)
-            diasSemExpedientePresidenteDutra.forEach(f => feriados.add(`${anoRef}-${f}`));
+            // Maio
+            '2026-05-01': { desc: 'Dia do Trabalho (Feriado)', classe: 'cat-feriado' },
+            '2026-05-09': { desc: 'Planejamento / Conselho de Classe (Fim do 1º Tri - Sábado)', classe: 'cat-planejamento' },
+            '2026-05-11': { desc: 'Início do 2º Trimestre', classe: 'cat-ano-letivo' },
+            '2026-05-18': { desc: 'Maio Laranja - Combate ao Abuso e Exploração Sexual', classe: 'cat-tematica' },
 
-            // Algoritmo de Computus (Cálculo do Domingo de Páscoa)
-            const a = anoRef % 19;
-            const b = Math.floor(anoRef / 100);
-            const c = anoRef % 100;
-            const d = Math.floor(b / 4);
-            const e = b % 4;
-            const f = Math.floor((b + 8) / 25);
-            const g = Math.floor((b - f + 1) / 3);
-            const h = (19 * a + b - d - g + 15) % 30;
-            const i = Math.floor(c / 4);
-            const k = c % 4;
-            const l = (32 + 2 * e + 2 * i - h - k) % 7;
-            const m = Math.floor((a + 11 * h + 22 * l) / 451);
-            const mesP = Math.floor((h + l - 7 * m + 114) / 31);
-            const diaP = ((h + l - 7 * m + 114) % 31) + 1;
+            // Junho
+            '2026-06-04': { desc: 'Corpus Christi (Feriado)', classe: 'cat-feriado' },
+            '2026-06-05': { desc: 'Projeto Meio Ambiente', classe: 'cat-projeto' },
+            '2026-06-17': { desc: 'São João nas Escolas', classe: 'cat-projeto' },
+            '2026-06-18': { desc: 'São João nas Escolas', classe: 'cat-projeto' },
+            '2026-06-19': { desc: 'São João nas Escolas', classe: 'cat-projeto' },
+            '2026-06-22': { desc: 'Recesso Junino', classe: 'cat-recesso' },
+            '2026-06-23': { desc: 'Recesso Junino', classe: 'cat-recesso' },
+            '2026-06-24': { desc: 'São João (Feriado)', classe: 'cat-feriado' },
+            '2026-06-25': { desc: 'Recesso Junino', classe: 'cat-recesso' },
+            '2026-06-26': { desc: 'Recesso Junino', classe: 'cat-recesso' },
+            '2026-06-29': { desc: 'Recesso Junino', classe: 'cat-recesso' },
+            '2026-06-30': { desc: 'Recesso Junino', classe: 'cat-recesso' },
 
-            const pascoa = new Date(anoRef, mesP - 1, diaP);
+            // Julho
+            '2026-07-01': { desc: 'Recesso Junino', classe: 'cat-recesso' },
+            '2026-07-02': { desc: 'Independência da Bahia (Feriado)', classe: 'cat-feriado' },
+            '2026-07-03': { desc: 'Recesso Junino', classe: 'cat-recesso' },
+            '2026-07-18': { desc: 'Família na Escola (Sábado Letivo)', classe: 'cat-projeto' },
 
-            const addDias = (dataBase, dias) => {
-                const res = new Date(dataBase);
-                res.setDate(res.getDate() + dias);
-                const mStr = String(res.getMonth() + 1).padStart(2, '0');
-                const dStr = String(res.getDate()).padStart(2, '0');
-                return `${anoRef}-${mStr}-${dStr}`;
-            };
+            // Agosto
+            '2026-08-11': { desc: 'Dia do Estudante', classe: 'cat-projeto' },
+            '2026-08-22': { desc: 'Término do 2º Trimestre', classe: 'cat-ano-letivo' },
+            '2026-08-24': { desc: 'Início do 3º Trimestre', classe: 'cat-ano-letivo' },
+            '2026-08-28': { desc: 'Semana da Pessoa com Deficiência Intelectual e Múltipla', classe: 'cat-tematica' },
+            '2026-08-29': { desc: 'Planejamento do Trimestre e Conselho de Classe (Sábado)', classe: 'cat-planejamento' },
 
-            // INCLUSÃO DINÂMICA DAS DATAS MÓVEIS (Diferenças relativas à Páscoa)
-            feriados.add(addDias(pascoa, -48)); // Segunda-Feira de Carnaval
-            feriados.add(addDias(pascoa, -47)); // Terça-Feira de Carnaval
-            feriados.add(addDias(pascoa, -46)); // Quarta-Feira de Cinzas
-            feriados.add(addDias(pascoa, -3));  // Quinta-Feira Santa
-            feriados.add(addDias(pascoa, -2));  // Sexta-Feira Santa (Paixão de Cristo)
-            feriados.add(addDias(pascoa, 60));  // Corpus Christi
+            // Setembro
+            '2026-09-07': { desc: 'Independência do Brasil (Feriado)', classe: 'cat-feriado' },
+            '2026-09-08': { desc: 'Nossa Senhora do Perpétuo Socorro (Feriado)', classe: 'cat-feriado' },
 
-            return feriados;
-        }
+            // Outubro
+            '2026-10-12': { desc: 'Nossa Senhora Aparecida (Feriado)', classe: 'cat-feriado' },
+            '2026-10-15': { desc: 'Dia do Professor (Feriado)', classe: 'cat-feriado' },
+            '2026-10-28': { desc: 'Dia do Servidor Público (Feriado)', classe: 'cat-feriado' },
 
-        const hojeObj = new Date();
-        const ano = hojeObj.getFullYear();
-        const mes = String(hojeObj.getMonth() + 1).padStart(2, '0');
-        const dia = String(hojeObj.getDate()).padStart(2, '0');
-        const hojeStr = `${ano}-${mes}-${dia}`;
+            // Novembro
+            '2026-11-02': { desc: 'Finados (Feriado)', classe: 'cat-feriado' },
+            '2026-11-15': { desc: 'Proclamação da República (Feriado)', classe: 'cat-feriado' },
+            '2026-11-20': { desc: 'Consciência Negra (Feriado)', classe: 'cat-feriado' },
+            '2026-11-23': { desc: '(Re)Matrícula alunos da casa', classe: 'cat-matricula' },
+            '2026-11-24': { desc: '(Re)Matrícula alunos da casa', classe: 'cat-matricula' },
+            '2026-11-25': { desc: '(Re)Matrícula alunos da casa', classe: 'cat-matricula' },
+            '2026-11-26': { desc: '(Re)Matrícula alunos da casa', classe: 'cat-matricula' },
+            '2026-11-27': { desc: '(Re)Matrícula alunos da casa', classe: 'cat-matricula' },
 
-        document.getElementById('data-inicio').value = hojeStr;
+            // Dezembro
+            '2026-12-04': { desc: 'Término do Ano Letivo (3º Trimestre)', classe: 'cat-ano-letivo' },
+            '2026-12-07': { desc: 'Entrega de Resultados Finais', classe: 'cat-resultados' },
+            '2026-12-08': { desc: 'Nossa Senhora da Conceição (Feriado)', classe: 'cat-feriado' },
+            '2026-12-09': { desc: 'Estudos de Recuperação Final', classe: 'cat-recuperacao' },
+            '2026-12-10': { desc: 'Estudos de Recuperação Final', classe: 'cat-recuperacao' },
+            '2026-12-11': { desc: 'Estudos de Recuperação Final', classe: 'cat-recuperacao' },
+            '2026-12-14': { desc: 'Resultado Final e Conselho de Classe', classe: 'cat-planejamento' },
+            '2026-12-25': { desc: 'Natal (Feriado)', classe: 'cat-feriado' }
+        };
 
-        let currentCalDate = new Date();
+        const sabadosLetivos2026 = new Set([
+            '2026-04-11', '2026-04-25', '2026-05-09', '2026-07-18', '2026-08-29'
+        ]);
+
+        let currentCalDate = new Date(2026, 1, 2);
         let selectedStart = null;
         let selectedEnd = null;
 
@@ -543,59 +582,52 @@
                 return;
             }
 
-            const feriadosSet = new Set();
-            for (let y = selectedStart.getFullYear(); y <= selectedEnd.getFullYear(); y++) {
-                const fAno = obterDiasSemExpedienteAno(y);
-                fAno.forEach(f => feriadosSet.add(f));
-            }
-
             let diasCorridos = 0;
-            let sabados = 0;
+            let sabadosNaoLetivos = 0;
             let domingos = 0;
-            let feriados = 0;
-            let diasUteis = 0;
+            let feriadosOuRecessos = 0;
+            let diasLetivos = 0;
 
             let cur = new Date(selectedStart);
             while (cur <= selectedEnd) {
                 diasCorridos++;
                 const dayOfWeek = cur.getDay();
                 const dateKey = formatarAnoMesDia(cur);
-                const isHoliday = feriadosSet.has(dateKey);
+                const ev = eventos2026[dateKey];
+
+                const isHoliday = ev && (ev.classe === 'cat-feriado' || ev.classe === 'cat-recesso');
+                const isSabadoLetivo = sabadosLetivos2026.has(dateKey);
 
                 if (dayOfWeek === 0) {
                     domingos++;
                 } else if (dayOfWeek === 6) {
-                    sabados++;
+                    if (isSabadoLetivo && !isHoliday) {
+                        diasLetivos++;
+                    } else {
+                        sabadosNaoLetivos++;
+                    }
                 } else if (isHoliday) {
-                    feriados++;
+                    feriadosOuRecessos++;
                 } else {
-                    diasUteis++;
+                    diasLetivos++;
                 }
 
                 cur.setDate(cur.getDate() + 1);
             }
 
-            document.getElementById('res-dias-uteis').textContent = diasUteis;
+            document.getElementById('res-dias-uteis').textContent = diasLetivos;
             document.getElementById('res-dias-corridos').textContent = diasCorridos;
-            document.getElementById('res-sabados').textContent = sabados;
+            document.getElementById('res-sabados').textContent = sabadosNaoLetivos;
             document.getElementById('res-domingos').textContent = domingos;
-            document.getElementById('res-feriados').textContent = feriados;
+            document.getElementById('res-feriados').textContent = feriadosOuRecessos;
 
             currentCalDate = new Date(selectedStart);
-            renderizarCalendario(feriadosSet);
+            renderizarCalendario();
 
             document.getElementById('resultsWrapper').style.display = 'block';
         }
 
-        function renderizarCalendario(feriadosSet) {
-            if (!feriadosSet) {
-                feriadosSet = new Set();
-                for (let y = selectedStart.getFullYear(); y <= selectedEnd.getFullYear(); y++) {
-                    const fAno = obterDiasSemExpedienteAno(y);
-                    fAno.forEach(f => feriadosSet.add(f));
-                }
-            }
-
+        function renderizarCalendario() {
             const year = currentCalDate.getFullYear();
             const month = currentCalDate.getMonth();
 
@@ -616,6 +648,8 @@
                 gridContainer.appendChild(cell);
             }
 
+            const eventosDoMes = [];
+
             for (let d = 1; d <= ultimoDiaMesAtual; d++) {
                 const cell = document.createElement('div');
                 cell.className = 'day-cell';
@@ -623,15 +657,15 @@
 
                 const thisDate = new Date(year, month, d);
                 const dateKey = formatarAnoMesDia(thisDate);
+                const ev = eventos2026[dateKey];
+                const dayOfWeek = thisDate.getDay();
 
-                if (selectedStart && selectedEnd && thisDate >= selectedStart && thisDate <= selectedEnd) {
-                    const dayOfWeek = thisDate.getDay();
-                    const isHoliday = feriadosSet.has(dateKey);
-
-                    if (isHoliday && dayOfWeek !== 0 && dayOfWeek !== 6) {
-                        cell.classList.add('holiday');
-                    } else if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-                        cell.classList.add('workday');
+                if (ev) {
+                    cell.classList.add(ev.classe);
+                    eventosDoMes.push({ dia: d, desc: ev.desc, classe: ev.classe });
+                } else if (selectedStart && selectedEnd && thisDate >= selectedStart && thisDate <= selectedEnd) {
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                        cell.classList.add('cat-dia-letivo');
                     } else {
                         cell.classList.add('weekend-in-range');
                     }
@@ -648,17 +682,44 @@
                 cell.textContent = j;
                 gridContainer.appendChild(cell);
             }
+
+            renderizarEventosDoMes(eventosDoMes);
+        }
+
+        function renderizarEventosDoMes(eventos) {
+            const container = document.getElementById('monthEventsList');
+            container.innerHTML = '';
+
+            if (eventos.length === 0) {
+                container.innerHTML = '<div style="font-size:13px; color:#94a3b8; font-style:italic;">Nenhum evento especial cadastrado para este mês.</div>';
+                return;
+            }
+
+            eventos.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'event-item';
+
+                const badge = document.createElement('div');
+                badge.className = `event-badge ${item.classe}`;
+                badge.textContent = item.dia;
+
+                const label = document.createElement('span');
+                label.textContent = item.desc;
+
+                row.appendChild(badge);
+                row.appendChild(label);
+                container.appendChild(row);
+            });
         }
 
         function mudarMesCalendario(delta) {
-            if (!selectedStart) return;
             currentCalDate.setMonth(currentCalDate.getMonth() + delta);
             renderizarCalendario();
         }
 
         function limparCampos() {
-            document.getElementById('data-inicio').value = hojeStr;
-            document.getElementById('data-fim').value = '';
+            document.getElementById('data-inicio').value = '2026-02-02';
+            document.getElementById('data-fim').value = '2026-12-04';
             document.getElementById('resultsWrapper').style.display = 'none';
             ocultarErro();
         }
