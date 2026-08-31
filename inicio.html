@@ -207,6 +207,12 @@
             font-weight: 600;
             color: #475569;
         }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
 
         .color-dot {
             width: 12px;
@@ -291,18 +297,16 @@
                 <h3>2. Calendário Visual Interativo</h3>
                 <p>Proporciona visualização clara do período consultado.</p>
                 <div class="legend-list">
-                    <div class="legend-item"><div class="legend-box cat-feriado"></div>🔴 Feriado Nacional</div>
-                        <div class="legend-item"><div class="legend-box cat-recesso"></div>🟠 Recesso Escolar</div>
-                        <div class="legend-item"><div class="legend-box cat-matricula"></div>🟢 Matrícula</div>
-                        <div class="legend-item"><div class="legend-box cat-ano-letivo"></div>🟡 Abertura / Término do Ano Letivo</div>
-                        <div class="legend-item"><div class="legend-box cat-planejamento"></div>🔵 Planejamento / Conselho / Jornada Pedagógica</div>
-                        <div class="legend-item"><div class="legend-box cat-interclasse"></div>🟣 Interclasse / Jogos Escolares</div>
-                        <div class="legend-item"><div class="legend-box cat-projeto"></div>🟤 Projetos / Eventos da Escola</div>
-                        <div class="legend-item"><div class="legend-box cat-tematica"></div>⚪ Temáticas / Conscientização</div>
-                        <div class="legend-item"><div class="legend-box cat-resultados"></div>🩷 Entrega de Resultados</div>
-                        <div class="legend-item"><div class="legend-box cat-recuperacao"></div>🔘 Recuperação Final</div>
-                        <div class="legend-item"><div class="legend-box cat-dia-letivo"></div>Dia Útil / Letivo</div>
-                        <div class="legend-item"><div class="legend-box" style="background-color: #f1f5f9;"></div>Fim de Semana</div>
+                    <div class="legend-item"><div class="legend-box cat-feriado"></div>Feriados Nacionais e Locais</div>
+                    <div class="legend-item"><div class="legend-box cat-recesso"></div>Recessos Escolares (Carnaval e Junino)</div>
+                    <div class="legend-item"><div class="legend-box cat-matricula"></div>Matrículas e (Re)Matrículas</div>
+                    <div class="legend-item"><div class="legend-box cat-ano-letivo"></div>Início e Fim do Ano / Trimestres</div>
+                    <div class="legend-item"><div class="legend-box cat-planejamento"></div>Jornada, Planejamento e Conselhos</div>
+                    <div class="legend-item"><div class="legend-box cat-interclasse"></div>Interclasse e Atividades Esportivas</div>
+                    <div class="legend-item"><div class="legend-box cat-projeto"></div>Projetos da Escola e Família na Escola</div>
+                    <div class="legend-item"><div class="legend-box cat-tematica"></div>Temáticas e Campanhas de Conscientização</div>
+                    <div class="legend-item"><div class="legend-box cat-resultados"></div>Entrega de Atas e Resultados Finais</div>
+                    <div class="legend-item"><div class="legend-box cat-recuperacao"></div>Estudos de Recuperação Final</div>
                 </div>
                 <ul>
                     <li><strong>Como usar:</strong> É exibido automaticamente após o cálculo. Utilize os botões <strong>&lt;</strong> e <strong>&gt;</strong> para navegar entre os meses selecionados.</li>
